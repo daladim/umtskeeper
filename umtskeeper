@@ -216,11 +216,22 @@ from calendar import monthrange
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 
+###################
+# constants
+###################
+
 version = '2.07'
 subVersion = '20151004'
 emailAuthor = 'elias@mintakaconciencia.net'
 
 __doc__ = 'UMTSkeeper version ' + version + '-' + subVersion + '\n' + __doc__
+
+ONE_MB = 1000000.0
+ONE_GB = 1000000000.0
+
+###################
+# end constants
+###################
 
 ###################
 # begin config
@@ -1959,15 +1970,15 @@ def WriteStatFile(writeToLog = False):
     s += '\n# last update:\t\t%s' % (strftime('%F %T'))
     s += '\n# connected since:\t' + connectionMsg
     s += '\n# current rate:\t\t%u Bytes/s' % currRate
-    s += '\n# transfer today:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBToday'] + st['txBToday']) / 1000000.0), (st['rxBToday'] / 1000000.0), (st['txBToday'] / 1000000.0))
-    s += '\n# transfer yesterday:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBYesday'] + st['txBYesday']) / 1000000.0), (st['rxBYesday'] / 1000000.0), (st['txBYesday'] / 1000000.0))
-    s += '\n# transfer month:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBMonth'] + st['txBMonth']) / 1000000.0), (st['rxBMonth'] / 1000000.0), (st['txBMonth'] / 1000000.0))
+    s += '\n# transfer today:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBToday'] + st['txBToday']) / ONE_MB), (st['rxBToday'] / ONE_MB), (st['txBToday'] / ONE_MB))
+    s += '\n# transfer yesterday:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBYesday'] + st['txBYesday']) / ONE_MB), (st['rxBYesday'] / ONE_MB), (st['txBYesday'] / ONE_MB))
+    s += '\n# transfer month:\t%.3f MBytes (%.3f down, %.3f up)' % (((st['rxBMonth'] + st['txBMonth']) / ONE_MB), (st['rxBMonth'] / ONE_MB), (st['txBMonth'] / ONE_MB))
     if conf['limitMonth'] > 0:
-      s += '\n# remaining transfer:\t%.1f MBytes (est. %.1f MBytes/day)' % (((conf['limitMonth'] - st['rxBMonth'] - st['txBMonth']) / 1000000.0), (remainingBytesDaily / 1000000.0))
+      s += '\n# remaining transfer:\t%.1f MBytes (est. %.1f MBytes/day)' % (((conf['limitMonth'] - st['rxBMonth'] - st['txBMonth']) / ONE_MB), (remainingBytesDaily / ONE_MB))
     else:
       s += '\n# remaining transfer:\tunlimited'
     s += '\n#'
-    s += '\n# transfer total:\t%.6f GBytes (%.6f down, %.6f up)' % (((st['rxBTot'] + st['txBTot']) / 1000000000.0), (st['rxBTot'] / 1000000000.0), (st['txBTot'] / 1000000000.0))
+    s += '\n# transfer total:\t%.6f GBytes (%.6f down, %.6f up)' % (((st['rxBTot'] + st['txBTot']) / ONE_GB), (st['rxBTot'] / ONE_GB), (st['txBTot'] / ONE_GB))
 
     s += '\n#######################################################################'
     s += '\n'
@@ -2081,13 +2092,13 @@ def WriteStatFileHTML(doHTML=True):
   s += '<br>\n'
   s += '<span class="val">%.2f kBytes/s</span> (%.3f &darr;, %.3f &uarr;)<br>\n' % ((currRate / 1000.0), (rxCurrRate / 1000.0), (txCurrRate / 1000.0))
   s += '<br>\n'
-  s += '<span class="val">%.3f MBytes</span> (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBToday'] + st['txBToday']) / 1000000.0), (st['rxBToday'] / 1000000.0), (st['txBToday'] / 1000000.0))
-  s += '%.3f MBytes (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBYesday'] + st['txBYesday']) / 1000000.0), (st['rxBYesday'] / 1000000.0), (st['txBYesday'] / 1000000.0))
-  s += '%.3f MBytes on %s<br>\n' % ((st['bMonthMin'] / 1000000.0), st['bMonthMinDate'])
-  s += '%.3f MBytes on %s<br>\n' % ((st['bMonthMax'] / 1000000.0), st['bMonthMaxDate'])
-  s += '%.3f MBytes (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBMonth'] + st['txBMonth']) / 1000000.0), (st['rxBMonth'] / 1000000.0), (st['txBMonth'] / 1000000.0))
+  s += '<span class="val">%.3f MBytes</span> (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBToday'] + st['txBToday']) / ONE_MB), (st['rxBToday'] / ONE_MB), (st['txBToday'] / ONE_MB))
+  s += '%.3f MBytes (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBYesday'] + st['txBYesday']) / ONE_MB), (st['rxBYesday'] / ONE_MB), (st['txBYesday'] / ONE_MB))
+  s += '%.3f MBytes on %s<br>\n' % ((st['bMonthMin'] / ONE_MB), st['bMonthMinDate'])
+  s += '%.3f MBytes on %s<br>\n' % ((st['bMonthMax'] / ONE_MB), st['bMonthMaxDate'])
+  s += '%.3f MBytes (%.3f &darr;, %.3f &uarr;)<br>\n' % (((st['rxBMonth'] + st['txBMonth']) / ONE_MB), (st['rxBMonth'] / ONE_MB), (st['txBMonth'] / ONE_MB))
   if conf['limitMonth'] > 0:
-    s += '<span class="val">%.1f MBytes</span> (est. <span class="val">%.1f MBytes/day</span>)<br>\n' % (((conf['limitMonth'] - st['rxBMonth'] - st['txBMonth']) / 1000000.0), (remainingBytesDaily / 1000000.0))
+    s += '<span class="val">%.1f MBytes</span> (est. <span class="val">%.1f MBytes/day</span>)<br>\n' % (((conf['limitMonth'] - st['rxBMonth'] - st['txBMonth']) / ONE_MB), (remainingBytesDaily / ONE_MB))
   else:
     s += '<span class="val">unlimited</span><br>\n'
   s += '</div>\n'
@@ -2615,15 +2626,19 @@ def Main():
         else:
           limitDay = conf['doLimitDay']
 
-        if (limitDay != 0) and (((st['rxBToday'] + st['txBToday']) / 1000.0) > limitDay):
+        if (limitDay != 0) and (((st['rxBToday'] + st['txBToday'])) > limitDay):
           PrintMessage('Daily transfer limit exceeded. CONNECTION LOCKED.')
-          errorCode = subprocess.call(sakisProg + 'disconnect', shell=True)
+          sakisSw = conf['sakisSwitches']
+          sakisOp = conf['sakisOperators']
+          errorCode = subprocess.call(sakisProg + ' ' + sakisSw + ' ' + sakisOp + ' disconnect', shell=True)
           limitExceeded = 1
           RaiseOfflineFlag('LOCKED (daily limit exceeded)')
 
-        if (conf['limitMonth'] != 0) and (((st['rxBMonth'] + st['txBMonth']) / 1000.0) > conf['limitMonth']):
+        if (conf['limitMonth'] != 0) and (((st['rxBMonth'] + st['txBMonth'])) > conf['limitMonth']):
           PrintMessage('Monthly transfer limit exceeded. CONNECTION LOCKED.')
-          errorCode = subprocess.call(sakisProg + 'disconnect', shell=True)
+          sakisSw = conf['sakisSwitches']
+          sakisOp = conf['sakisOperators']
+          errorCode = subprocess.call(sakisProg + ' ' + sakisSw + ' ' + sakisOp + ' disconnect', shell=True)
           limitExceeded = 1
           RaiseOfflineFlag('LOCKED (monthly limit exceeded)')
       #end if not limitExceeded
