@@ -220,9 +220,8 @@ from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 # constants
 ###################
 
-version = '2.07'
-subVersion = '20151004'
-emailAuthor = 'elias@mintakaconciencia.net'
+version = '2.08'
+subVersion = '20180807'
 
 __doc__ = 'UMTSkeeper version ' + version + '-' + subVersion + '\n' + __doc__
 
@@ -2408,7 +2407,7 @@ def Main():
             except gaierror:
               inetIsDown = True
               #~ resetNecessary = True
-              PrintMessage('DNS lookup of %s failed. The modem seems to be stalled without the system being aware of it. Please send feedback to %s if it doesn\'t reconnect after this error.' % (conf['DNSprobeDomain'], emailAuthor))
+              PrintMessage('DNS lookup of %s failed. The modem seems to be stalled without the system being aware of it. Please send feedback on Github if it doesn\'t reconnect after this error.' % (conf['DNSprobeDomain']))
               ResetUSB()
         #end if not inetIsDown
 

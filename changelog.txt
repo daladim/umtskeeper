@@ -1,3 +1,10 @@
+2.08
+
+20180807
+
+- Hosted the script on Github
+- Fixed the monthly/weekly data limit
+
 2.07
 
 20151004
