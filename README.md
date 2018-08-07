@@ -20,3 +20,15 @@ Many thanks and most of the credit should go to Elijah el-Mintak, who developed 
 With his consent, I am now hosting this script on Github, and added a patch of mine on this occasion. Having this script on Github will now (maybe) have the community to extend it further.
 
 I will be happy to review and merge any pull request!
+
+## TODO
+
+This tool has been working well since 2013. Yet some features could still be added, such as :
+
+* Investigate running the thing as a real deamon, which should allow to run it
+  without log-in on stand-alone headless systems. Install/uninstall,
+  rc-scripts, logrotate.
+* Probably make some more use of the webserver.
+* Get connect/disconnect markers into the graphs.
+* Get UMTSkeeper to work with NetworkManager
+* Sakis3g is also an old (yet great) piece of software. Does it need a replacement?
