@@ -1,0 +1,485 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <title>UMTSkeeper internet keep-online</title>
+  <meta name="keywords" content="internet keep-up online linux script">
+  <link id="favicon" rel="shortcut icon" type="image/ico" href="favicon.ico">
+  <style type="text/css">
+    .txcolor {color: #302000}
+    body { font-family: sans-serif; font-size: 10pt; }
+    .sm { font-size: 0.8em; }
+
+    h1 {text-align: center}
+    h3 {padding-top: 1.2em;}
+    h4 {padding-top: 1.2em;}
+
+    a {color: #406030;}
+    a:hover {color: black; background-color: #f4f8f2;}
+    a:active {color: #70a070; background-color: #f0f8f2;}
+    a:visited {color: #70a070;}
+
+    div#navigation {font-size: 0.91em; float: left; width: 12em; margin-top: 4em; padding: 0; position: fixed;}
+    div#navigation a {display: block; padding: 0em; font-weight: bold;}
+
+    div#content {text-align:justify; text-indent:0em; margin-left: 13em; padding: 0 1em; min-width: 16em;}
+    div#content h2 {margin: 2em 0 0 -0.5em}
+    div.marginright {margin-right: 1em}
+    div.indent {margin-left: 1em}
+    div.float-right {float: right; width:38%; margin:0 1em 1em 2em}
+
+    table {border-collapse:collapse}
+    td {vertical-align:top;padding:0 0 0 1em}
+    td.code {font-family: monospace; font-weight: bold; text-align: left; padding: 0 0.5em 0 1em; background-color:#f8f4c0;}
+
+    .code {font-family: monospace; font-weight: bold; text-align: left; margin: 1em 0em 1em 1em; padding: 1em; background-color:#f8f4c0;}
+    div.code ol {list-style-type: decimal; list-style-position: outside; color: #000070;}
+    .shade-frame {padding: 1em; color: #604000; background-color:#f8f4ec; border-width: 1px; border-style: solid; border-color: #f0e0c0;}
+
+    .out {font-family: monospace; font-weight: bold;}
+    .command {font-family: monospace; font-weight: bold; color: #805000;}
+    .path {font-weight: bold; font-style: italic;}
+    .alert {font-weight: bold; color: #f05000;}
+
+    img {margin: 0.4em 1em 0.4em 1em; padding: 0; border-width: 1px; border-style: solid; border-color: #604000;}
+    img.img-left {float: left;}
+    img.img-right {float: right;}
+    div.img-desc {margin: 0em 0em 0em 0em; padding: 1em; color: #604000; background-color:#f8f4ec; border-width: 1px; border-style: solid; border-color: #f0e0c0;}
+    .clear {clear:both;}
+
+    ul {list-style-type:circle; margin-left: 1em;}
+  </style></head>
+<body class="txcolor">
+  
+<div id="navigation">
+  <a href="#installation">Installation</a><br>
+  <a href="#params">Parameters</a><br>
+  <a href="#links">Links</a><br>
+  <a href="#qa">Q & A</a><br>
+  <a href="#secure">Improving Security</a><br>
+  <a href="#license">License and Disclaimer</a><br>
+  <a href="mailto:elias@mintakaconciencia.net">e-mail me</a> a thankyou - <a href="http://mintakaconciencia.net/mintaka-public.key">here</a> is my public key for GPG encryption, should you need it.<br>
+</div>
+
+<div id="content">
+  <p>
+    Note: This document is a partial copy of the UMTSkeeper website for your convenience. The most current version can be found at this location: <a href="http://mintakaconciencia.net/squares/umtskeeper/">http://mintakaconciencia.net/squares/umtskeeper/</a>.
+  </p>
+  
+	<a name="installation"></a>
+	<h2>Installation</h2>
+  <h3>Requirements</h3>
+  <p>
+    To run the program, Python2 needs to be installed (it's made with 2.7). Python is installed with many distributions by default. If not, it should be in your package repositories, or you can download it from here: <a href="http://python.org/download/">http://python.org/download/</a>. Be aware that Python3 is not necessarily backward compatible with Python2 code. It's likely that UMTSkeeper will not run with Python3 - I did not test it yet.
+  </p>
+  <p>
+    UMTSkeeper uses the Sakis3G script by Sakis Dimopoulos to set up the modem and connect to the net. Since the original author abandoned the project (and the original website, sakis3g.org, is offline), <b>from version 2.05, I decided to include the Sakis3G script with the UMTSkeeper download</b> (I am not afiliated with Sakis Dimopoulos). I include the "binary free" version, yet the "binary inclusive" (including usb_modeswitch) will do as well, should you need that. For further information on Sakis3G, get the website from the Internet Archive Wayback Machine: <a href="http://web.archive.org/web/*/http://www.sakis3g.org/">http://web.archive.org/web/*/http://www.sakis3g.org/</a>. Read the manual!<br>
+    An up-to-date Sakis3G is maintained by Brenton Edgar Scott on GitHub: <a href="https://github.com/trixarian/sakis3g-source">https://github.com/trixarian/sakis3g-source</a>.
+  </p>
+  <p>
+    I'll do the commands that have to be given as the <span class="out">root</span> user (or superuser, the general linux system administrator), using the <span class="command">sudo</span> program, which asks you for your own password every time and which is the standard way on freshly installed Ubuntu systems. On other systems you may type <span class="command">su</span> to become <span class="out">root</span>. (sidenote: to activate the root account on Ubuntu, define a password for it: <span class="command">sudo passwd</span>)<br>
+    Also, for packet installation, I will use the <span class="command">apt-get</span> command, which is standard on Debian based distributions (also various flavors of *ubuntu and Raspbian). On other distributions I assume that you are familiar with whatever packet installer it uses (<span class="command">yum</span> etc.).
+  </p>
+  
+  <h3>Upgrading from version 1.xx</h3>
+  <p>
+    Version 2 is designed to be a drop-in replacement for version 1.xx. Anyway, make a backup of your files first, then extract the new program files into the version 1.xx program directory. Version 2.xx will first convert your umtskeeper.stat file to a new format and add a few items. The px*.png files are not needed anymore.
+  </p>
+  
+  <h3>Prepare</h3>
+  <p>
+    UMTSkeeper and Sakis3G reside in the same directory. In this example it's <span class="path">/home/mintaka/umtskeeper/</span> - a subdirectory of my <span class="path">home</span> directory, where <span class="out">mintaka</span> is my user name. Substitute <span class="out">mintaka</span> with your own user name. (Alternatively, you can put it in any location you find suitable). Typing <span class="command">pwd</span> will show you the exact location you are working in which you will need later when you automate things (thanks BigCowPi for simplyfying this procedure).
+  </p>
+  <p>
+    If you don't have internet on your target system yet, <a href="#download">download</a> and transport the files there. The archive contains a "readme" file with these instructions as well.
+  </p>
+    
+  In a terminal, this will download the archive, check if you indeed obtained the file from this site (see output!), extract the scripts, and make them executable (input line-by-line):
+  <p class="code command">
+    cd ~<br>
+    pwd<br>
+    mkdir umtskeeper<br>
+    cd umtskeeper<br>
+    wget "http://mintakaconciencia.net/squares/umtskeeper/src/umtskeeper.tar.gz"<br>
+    md5sum umtskeeper.tar.gz<br>
+    tar -xzvf umtskeeper.tar.gz<br>
+  </p>
+  
+  <p>
+    Also make sure that your system properly detects the modem. The usual type of modem will first register as a storage device to the system, containing a Windows executable which installs the modem manager software (on Windows, that is). On Linux, these devices may need to be switched to modem mode using the program <span class="out">usb_modeswitch</span>, which should be available in your packet repositories (most modern distributions have it installed by default; if not, try <span class="command">sudo apt-get install usb-modeswitch</span> before you go compile it yourself). There's also a "binary" version of Sakis3G available which includes usb_modeswitch. In usb_modeswitch, many modems are pre-configured to work out-of-the-box, so there's no more to be done there. If your modem is not switched automatically then you can find more on configuring usb_modeswitch on the <a href="http://www.draisberghof.de/usb_modeswitch/">usb_modeswitch site</a> and its <a href="http://www.draisberghof.de/usb_modeswitch/bb/">forum</a>.
+  </p>
+  <p>
+    <b>Ubuntu users</b>: do not set up an automatic connect with the GNOME Network Manager because it interferes with Sakis3G. You will likely use a headless machine, therefore the NM will not be useful anyway, so consider to uninstall it. This might apply to other distributions as well, I didn't test. You can still set up your network connections in <span class="path">/etc/network/interfaces</span>. To remove, type <span class="command">sudo apt-get remove network-manager</span>.
+  </p>
+  
+  <h3>Notes on the Raspberry Pi</h3>
+  <p>
+    <b>Power demand:</b> 3G modems draw quite a lot of current. Therefore you&apos;ll need to attach it using a powered USB hub (which can also power the RasPi), or use a regulated 5V power supply that can deliver at least 1A, attached to the power pins at the GPIO header (the micro-USB power socket and associated polymer fuse would be overloaded by that amount of current). For more information, refer to the numerous tutorials on the net.
+    <h4>Raspbian (ver. 2014-09-08)</h4>
+    <span class="out">usb_modeswitch</span> and <span class="out">ppp</span> are not installed by default.
+    <p class="code command">
+      sudo apt-get install usb-modeswitch ppp
+    </p>
+    <p>
+      <b>Mode-switching problems:</b> When booting with an attached USB modem, the device may not be identified as mode-switchable (due to timing/slow boot of the modem itself, I suspect). As a possible remedy, UMTSkeeper has an automatic reboot function from 2.07 onwards. If this doesn\'t help, try to remove usb_modeswitch and use the "binary inclusive" version of Sakis3G which comes with its own usb_modeswitch (<a href="https://github.com/trixarian/sakis3g-source">source on GitHub</a>).'
+    </p>
+    Feedback wanted: if you know of caveats with other distributions, please tell me :-)
+  </p>
+  
+  <h3>First Run</h3>
+  <p>
+    The clever way is to first connect manually with Sakis3G in interactive mode. Sakis3G will give you hints for the options to use. Do it as <span class="out">root</span>.<br>
+    Please be aware that you should <em>never</em> run a downloaded script with <span class="out">root</span> privileges unless you are sure what you do and that you indeed got the original file from the original source (not some trojan from a spy-in-the-middle). <a href="http://mintakaconciencia.net/squares/umtskeeper/index.html#download">Checking the MD5</a> can help but doesn't make you secure. You have been warned.
+  </p>
+  <p class="code command">
+    sudo ./sakis3g --interactive
+  </p>
+  <p>
+    Hint: if you are asked for APN user or APN password but you have none, enter "0".
+  </p>
+  <p>
+    If your connection works in interactive mode, unplug and re-plug your modem and try with UMTSkeeper with all the switches and options, also as <span class="out">root</span>.<br>
+    For example (this is a single line, mind the quotes!):
+  </p>
+  <p class="code">
+    <span class="command">sudo ./umtskeeper --sakisoperators "USBINTERFACE='0' OTHER='USBMODEM' USBMODEM='12d1:140c' SIM_PIN='1234' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0' APN_PASS='0'" --sakisswitches "--sudo --console" --devicename 'Huawei' --log --silent --nat 'no'</span><br>
+    <br>
+    umtskeeper: process not found
+  </p>
+  <p>
+    UMTSkeeper will stay running after this. To end it, press the key combination <span class="command">CTRL+C</span>.
+  </p>
+  <p>
+    When run for the first time some log files will be created, among them <span class="path">/var/log/umtskeeper.log</span> (the main log file), <span class="path">umtskeeper.stat.html</span> (HTML statistics file to view in your web browser), and <span class="path">umtskeeper.stat</span> (the file which keeps the numbers for the next run). To view <span class="path">umtskeeper.log</span>, best open a second terminal and use <span class="command">cat</span> or <span class="command">tail</span> to view its content. It should contain something like this:
+  </p>
+
+  <table>
+    <tr>
+      <td>1</td><td class="code command">cat /var/log/umtskeeper.log<br>&nbsp;</td><td style="width:25em"></td>
+    </tr><tr>
+      <td>2</td><td class="code">2013-07-23 12:16:05 Start: PID = 21338<br></td><td></td>
+    </tr><tr>
+      <td>3</td><td class="code">Main stats file not found.<br></td><td rowspan="3">This is normal for the first run when the main statistics file <span class="path">umtskeeper.stat</span> is not yet present. Such an output should only make you worry if they happen with subsequent starts. Sometimes, UMTSkeeper is interrupted just when it is in the middle of writing the stats file, which would be fatal. For such (rare) cases, a backup of that file is kept.</td>
+    </tr><tr>
+      <td>4</td><td class="code">Main stats file is incomplete. This happens in rare cases when UMTSkeeper is killed in the wrong moment. Trying to load backup file. This can cause slight inacurracies in the statistics.<br></td><td></td>
+    </tr><tr>
+      <td>5</td><td class="code">Main stats file backup not found. Possibly this program is being run for the very first time.<br></td><td></td>
+    </tr><tr>
+      <td>6</td><td class="code">2013-07-23 12:16:05 stats period = 8s, connection check period = 32s<br></td>
+    </tr><tr>
+      <td>7</td><td class="code">Monthly stats file not found, setting up a new one.<br></td><td rowspan="3">New statistics files have been created. These are comma-separated-values files which you can import into your favorite spreadsheet software to plot lenghty graphs etc. - these statistics are kept until you manually delete them. The files are: <span class="path">umtskeeper.hourly.csv</span>, <span class="path">umtskeeper.daily.csv</span>, <span class="path">umtskeeper.monthly.csv</span>.</td>
+    </tr><tr>
+      <td>8</td><td class="code">Daily stats file not found, setting up a new one.<br></td><td></td>
+    </tr><tr>
+      <td>9</td><td class="code">Hourly stats file not found, setting up a new one.<br></td><td></td>
+    </tr><tr>
+      <td>10</td><td class="code">Internet status:<br></td><td></td>
+    </tr><tr>
+      <td>11</td><td class="code">Cell network: No modem plugged.<br></td><td>This is OK if you have the usual type of modem that first registers as a storage device to the system. The script will wait until the device is switched to modem mode.</td>
+    </tr><tr>
+      <td>12</td><td class="code">2013-07-23 12:16:41 Internet connection is DOWN. Calling Sakis3G connect...<br></td><td></td>
+    </tr><tr>
+      <td>13</td><td class="code">Sakis3G cmdLine: nice ./sakis3g connect --sudo --console USBINTERFACE='0' OTHER='USBMODEM' USBMODEM='12d1:140c' SIM_PIN='1234' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0' APN_PASS='0'<br></td><td>Commands that are being sent to Sakis3G. Use this for trying manually if something doesn't work. Sakis3G is called under the command <span class="command">nice</span> which means that the program will run with lower priority. S3G is CPU hungry so you want it to play nicely and not interrupt other running processes.</td>
+    </tr><tr>
+      <td>14</td><td class="code">Sakis3G says...<br></td><td></td>
+    </tr><tr>
+      <td>15</td><td class="code">E1550 connected to PROVIDER (13579).<br></td><td rowspan="3">The connection has been established.</td>
+    </tr><tr>
+      <td>16</td><td class="code">2013-07-23 12:17:14 Testing connection...<br></td><td></td>
+    </tr><tr>
+      <td>17</td><td class="code">2013-07-23 12:17:24 Success... we are online!<br></td><td></td>
+    </tr>
+  </table>
+
+  <p>
+    If you unplug your modem now and re-plug it again then the connection should be established automatically. Give usb_modeswitch and Sakis3G a little patience.
+  </p>
+
+  <h3>Automatic Start</h3>
+  <p>
+    Last, you want to start UMTSkeeper automatically after boot. Put a line into <span class="path">/etc/rc.local</span> like this (it's a single line which will make it run in the background and redirect screen output to an <span class="path">error.log</span> file):  <span class="path">/etc/rc.local</span> has to be edited by the <span class="out">root</span> user. Replace the path <span class="path">/home/mintaka/</span> in this example by the path you found out previously.
+  </p>
+  <p class="code command">
+    /home/mintaka/umtskeeper/umtskeeper --sakisoperators "USBINTERFACE='0' OTHER='USBMODEM' USBMODEM='12d1:140c' SIM_PIN='1234' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0' APN_PASS='0'" --sakisswitches "--sudo --console" --devicename 'Huawei' --log --silent --monthstart 8 --nat 'no' --httpserver &>> /home/mintaka/umtskeeper/error.log &
+  </p>
+
+  <p>
+    A line for only logging transfer statistics on <span class="out">wlan0</span> would for example look like this:
+  </p>
+  <p class="code command">
+    /home/mintaka/umtskeeper/umtskeeper --logonly --log --silent --monthstart 14 --iface 'wlan0' --httpserver &>> /home/mintaka/umtskeeper/error.log &
+  </p>
+	
+  <h3>Dynamic DNS updater and e-mail notification</h3>
+  <p>
+    There are two ways of using DDNS with UMTSkeeper: either let it call an external command line tool (if your DNS provider has a proprietary protocol), or use the internal update methods. Two methods are currently implemented: one is for the "freedns" style method which uses only an URL with an update code, and the other is the so-called "Members NIC Update API", invented by dyn.com and widely adopted by other services. The updater has been tested with freedns.afraid.org, dyn.com (dyndns.com) and no-ip.com.<br>
+    The DNS updater must be configured by configuration file, as the configuration potentially contains sensitive data. See the sample config file for more information.<br>
+    Notice, that if you use the DNS updater together with the webserver then your transfer statistics will be more easily accessible from the internet. If you don't want this, you can obfuscate the server by using a port other than standard HTTP port 80 (default is 8000), or you can secure it by using the IP whitelist feature. By all means, if those transfer statistics contain sensitive data <em>(all human-generated traffic does!)</em>, <b>don't get them over public nets without encryption</b>. Security is your responsibility, don't take this lightly. <a href="#secure">Read my advice.</a><br>
+    <br>
+    UMTSkeeper can also notify you about IP changes by e-mail. This must be configured by configuration file, as the configuration will contain sensitive data.
+  </p>
+
+
+  <a name="uninstall"></a>
+  <h2>Uninstallation</h2>
+  <p>
+    Currently, UMTSkeeper does not have an uninstaller (just as there is no installer). To remove it without a trace, delete <span class="path">/var/log/umtskeeper.log</span> and the whole program directory, and any special HTML dirs and temp dirs you may have made. That should be all.
+  </p>
+	
+
+  <a name="params"></a>
+  <h2>Parameters and Customization</h2>
+  
+  <h3>Configuration file:</h3>
+  <p>
+    All command line parameters can also be specified in a configuration file. UMTSkeeper will look for <span class="path">&lt;progPath&gt;/umtskeeper.conf</span> (1). The configuration goes this way: (1) overrides the program defaults, and values in a config file given by the <span class="command">--conf &lt;conffile&gt;</span> command line directive overrides (1). Further, any parameters given on the command line will override the values from the config files. An example config file (<span class="path">umtskeeper.conf.sample</span>) is included in the package, along with a lot of explanation.
+  </p>
+
+  <h3>Commands:</h3>
+  <span class="command">connect</span><br>
+    <div class="indent">Retry connecting for example if connecting was suspended by --sakismaxfails.</div>
+  <span class="command">resetmonth</span><br>
+    <div class="indent">Manually reset the monthly transfer counter.</div>
+  <span class="command">resettransferstats</span><br>
+    <div class="indent">Reset the transfer amount counters. This will not reset the rate counters. Data will be deleted without asking again.</div>
+  <span class="command">resetratestats</span><br>
+    <div class="indent">Reset the rate counters. This will not reset the transfer amount counters. Data will be deleted without asking again.</div>
+  <span class="command">stop, quit, end</span><br>
+	<div class="indent">Any of these will terminate a running UMTSkeeper.</div>
+
+
+  <h3>Options:</h3>
+  <span class="command">--log</span><br>
+    <div class="indent">Log to file (default: don't log). See also: <span class="command">--logfile</span>, <span class="command">--iface</span>.</div>
+  <span class="command">--logonly</span><br>
+    <div class="indent">Do not connect to internet. Use this for only logging statistics on a connection. Recommended only for (W)LAN devices. (default: do connect)</div>
+  <span class="command">--noroot</span><br>
+    <div class="indent">Force running without requiring root privileges. The default behaviour is that if writing to system dirs returns "permission denied", it switches to no-root mode. This means, that all temp files and logs will be stored in the program directory. This switch is the equivalent of setting the config variables <span class="command">conf['logFile']=progPath+'umtskeeper.log'</span>, <span class="command">conf['tempPath']=progPath</span>, and <span class="command">conf['statFilePath']=progPath</span>.</div>
+  <span class="command">--nostats</span><br>
+    <div class="indent">Don't write statistics files. (default: write them)</div>
+  <span class="command">--htmlstats</span><br>
+    <div class="indent">Generate a HTML page without the internal webserver running. The HTML file is by default written to the temp dirctory: <span class="path">/run/umtskeeper/umtskeeper.stat.html</span> or <span class="path">/var/run/umtskeeper/umtskeeper.stat.html</span>. If <span class="command">--htmlPath</span> is given then the HTML file is copied there. (default: none)</div>
+  <span class="command">--silent</span><br>
+    <div class="indent">Suppress screen output. (default: verbose)</div>
+  <span class="command">--httpserver</span><br>
+    <div class="indent">Run the internal webserver (default: off). See also <span class="command">--httpport</span>.</div>
+
+  <h3>Parameters:</h3>
+  <span class="command">--conf &lt;/path/to/configfile&gt;</span><br>
+    <div class="indent">Specify a configuration file to use. For the order of configuration, look above. (default: none)</div>
+  <span class="command">--iface &lt;iface&gt;</span><br>
+    <div class="indent">Network interface to monitor. This parameter is required for transfer logging. (default: ppp0)</div>
+  <span class="command">--nat &lt;iface&gt;</span><br>
+    <div class="indent">Enable internet connection forwarding (NAT). <span class="out">&lt;iface&gt;</span> is the name of the network adapter that connects to the internet. Often, this is <span class="out">ppp0</span> (look it up with <span class="command">ifconfig</span> when the connection is up). Set to 'no' if no forwarding is required. (default: no)</div>
+  <span class="command">--testcycle &lt;s&gt;</span> (formerly <span class="command">--interval</span>)<br>
+    <div class="indent">Test connection in intervals of s statistics cycles (1 cycle is about 4 seconds). (default: 8).</div>
+  <span class="command">--sakismaxfails &lt;n&gt;</span><br>
+    <div class="indent">Maximum of failed connection retries by Sakis3G in sequence until the program gives up (actually it tries twice in a cycle). This parameter should help to save on power, especially with battery driven machines. Sakis3G is CPU intensive. So, if for any reason (modem unplugged or other failure) the connection doesn't work then we'd better give up constantly trying. See also <span class="command">--sakisfaillockduration</span>. (default: 4)</div>
+  <span class="command">--sakisfaillockduration &lt;s&gt;</span><br>
+    <div class="indent">Duration (in seconds) after which we retry to connect after the maximum of failed connection retries was reached. See also <span class="command">--sakismaxfails</span>. (default: 300)</div>
+  <span class="command">--logfile "&lt;file&gt;"</span><br>
+    <div class="indent">To specify an alternative log file. This implies the option 'log'. (default: <span class="path">/var/log/umtskeeper.log</span>)</div>
+  <span class="command">--devicename "&lt;string&gt;"</span><br>
+    <div class="indent">Set device name (eventually needed for device reset, this should be a unique identifier containing only letters and numbers. Get it with <span class="command">lsusb</span> (don't listen to what Sakis3G says).<br>
+    Example: lsusb may return the device name string: <span class="out">ZTE WCDMA Technologies MSM MF110/MF627/MF636</span>. Any unique part of this name is ok to take as the device name. So, <span class="command">--devicename "MF636"</span> would be appropriate here.</div>
+  <span class="command">--statfilepath "&lt;path&gt;"</span> (formerly <span class="command">--statpath"</span>)<br>
+    <div class="indent">Write statistics files to this location. (default: script path)</div>
+  <span class="command">--temppath "&lt;path&gt;"</span><br>
+    <div class="indent">Specify alternative path for temporary files. The default is to make a subdirectory in <span class="path">/run/</span> or <span class="path">/var/run/</span> (whichever is found), which is a tmpFS (ramdisk) filesystem on most platforms, and therefore the contents are lost on shutdown.</div>
+  <span class="command">--htmlpath "&lt;path&gt;"</span><br>
+    <div class="indent">Document path of external webserver to copy the stats HTML file to. (default: empty - do not copy)</div>
+  <span class="command">--httpport &lt;port&gt;</span><br>
+    <div class="indent">Port on which the internal webserver is listening. Setting the port implies <span class="command">--httpserver</span>. (default: 8000)</div>
+  <span class="command">--limitday &lt;limit&gt;</span><br>
+    <div class="indent">Set daily transfer limit (in bytes). See also <span class="command">--limitmonth</span>. (default: 0 = no limit)</div>
+  <span class="command">--limitmonth &lt;limit&gt;</span><br>
+    <div class="indent">Set monthly transfer limit (in bytes). See also <span class="command">--monthstart</span>, <span class="command">--limitday</span>. (default: 0 = no limit)</div>
+  <span class="command">--monthstart &lt;day&gt;</span><br>
+    <div class="indent">Day of month when monthly transfer count begins. This is typically the day on which your monthly contract starts. See also <span class="command">--limitmonth</span>, <span class="command">--limitday</span>. (default: 0 = no limit)</div>
+  <span class="command">--sakisswitches "&lt;switches&gt;"</span><br>
+    <div class="indent">Set switches to pass to Sakis3g.</div>
+  <span class="command">--sakisoperators "&lt;operators&gt;"</span><br>
+    <div class="indent">Set operators to pass to Sakis3g.</div>
+
+  <a name="links"></a>
+  <h2>Links</h2>
+  <h3>Further Reading and Acknowledgements</h3>
+  <a href="http://bigcowpi.blogspot.com/" onclick="return !window.open(this.href);">BigCowPi</a> (Andy Thomson) has a great <a href="http://www.instructables.com/id/Raspberry-Pi-as-a-3g-Huawei-E303-wireless-Edima/" onclick="return !window.open(this.href);">tutorial</a> on turning the Raspberry Pi into a cell network internet gateway and wireless router, using UMTSkeeper/Sakis3G. This should also work with other computers. Also, there is a tutorial about setting up a NAS (network storage) using the RasPi which can be combined with the gateway/router function, and a good collection of other RasPi related stuff. Check out his site.<br>
+  <br>
+  Many thanks to afraid.org for <a href="http://freedns.afraid.org/" onclick="return !window.open(this.href);">Free DNS</a> hosting.
+
+  <h3>References</h3>
+    <a href="https://github.com/trixarian/sakis3g-source" onclick="return !window.open(this.href);">Sakis3G source project on GitHub</a>.<br>
+    <a href="http://sakis3g.org" onclick="return !window.open(this.href);">Sakis3G</a> (down) (alternatively from the <a href="http://web.archive.org/web/*/http://www.sakis3g.org/" onclick="return !window.open(this.href);">Wayback Machine</a>)<br>
+    <a href="http://www.draisberghof.de/usb_modeswitch/" onclick="return !window.open(this.href);">usb_modeswitch</a><br>
+    <a href="http://downloads.sourceforge.net/project/vim-n4n0/sakis3g.tar.gz" onclick="return !window.open(this.href);">An older Sakis3G on SourgeForge</a> (thanks BigCowPi for the link).<br>
+
+
+  <a name="qa"></a>
+  <h2>Questions and Answers</h2>
+	
+  <h4>Q: Do I really *have* to run the thing as root?</h4>
+  <b>A:</b> No. For some functions of Sakis3G, and (rarely) to reset the modem, root access is necessary. Try if Sakis works without sudo, and if it does there's nothing wrong with running UMTSkeeper as an ordinary user. In this case, all logfiles will be created in the program directory.<br>
+  Deamonising it with <span class="path">rc.local</span> will run it as root, though.
+
+  <h4>Q: Does the webserver function put my system at a risk?</h4>
+  <b>A:</b> It shouldn't. The HTTP server that UMTSkeeper uses is a very rudimentary implementation that uses the BaseHTTPServer module of Python. It's specially tailored so that it serves only those files that are on its whitelist, and everything else will receive a 403 (forbidden) reply. It does not run any scripts beside those in UMTSkeeper. The current implementation will ignore all URI arguments it doesn't know. Access can be restricted by an IP whitelist.
+
+  <a name="auth"></a>
+  <h4>Q: Why does the internal webserver not offer an authentication mechanism?</h4>
+  <b>A:</b> In short: because it would bring more trouble than it would help.<br>
+  More specific, I thought about implementing user authentication to the server but I settled on providing none because it would require some knowledge on the user side that can not be ascertained. There are some facts about HTTP authentication that have to be kept in mind or else it may work contrary to the intention. First, there are basically two standard authentication mechanisms: 'Basic' and 'Digest' (there's also other proprietary ones). Basic authentication is rather easy to implement but it will send passwords in <em>unencrypted</em> form (base64-encoded plaintext). Digest <em>should</em> be more secure in that it is a challenge-response method where the server sends a random string to the client, who encodes this random string together with the username/password (MD5-hash) before sending it back.<br>
+  But the most important thing to know is, that <b>neither of the HTTP authentication methods will cause an encrypted connection to be set up, nor can they guarantee that data is actually coming from the addressed server</b>. It is solely a way of letting the server ascertain that the user on the other end knows the right password. So, if users are not aware of this, they will likely live in a false sense of security, hence exposing their usage statistics to the internet or exposing (maybe even recycled) passwords. Also, the HTTP server is only a small side-function of this program for convenience, and I'm by no means a data security expert. And not least, the license makes strong encryption mandatory which would forbid the use of MD5 for hashing passwords. In other words, there's simply too many pitfalls there.<br>
+  Also read: <a href="#secure">How can I secure my usage statistics against eavesdropping criminals?</a>
+
+  <a name="secure"></a>
+  <h4>Q: How can I secure my usage statistics against eavesdropping criminals?</h4>
+  <b>A:</b> Good question. For those who don't know yet, the internet is not free anymore. It is currently being turned into an instrument of repression by governments and other criminals, in a rapid and agressive pace. The internet will change a lot during the years to come. Of the few defences we have at the moment, one is the use of strong end-to-end encryption. From the user (and engineering) viewpoint it will take the awareness <em>(but not anxiety!)</em>, that <b>every byte sent over the public networks is likely to be recorded and analyzed</b>. Permanent care shall be taken for the protection of our data, in the best of our ability. Sad but that's how it is. This said, I shall make the following clear in bold letters:
+  <p>
+    <div class="alert indent marginright">UMTSkeeper contains a data logger which obtains and displays real-time information about your internet usage and hence can be used to spy on you and profile your habits.</div>
+  </p>
+  Notice, that <b>the license forbids such use</b>. Yet, criminals will likely shit on any rules and rights. Therefore, the foremost rule for you as the user, and possibly, trusted network admin in charge of the functioning of your fellows' internet connection, is to <b>never expose the UMTSkeeper statistics to public networks in unencrypted form</b>. For UMTSkeeper to contain such encryption or even only user authentication, there are just <a href="#auth">too many pitfalls</a>. Instead, there are plenty of ways to rely on that are more proven:
+  <p>
+    <ul>
+      <li>
+	Disable the statistics feature altogether. Do this by setting <span class="command">conf['writeStats']=False</span> or by using the command line switch <span class="command">--nostats</span>.<br><br>
+      </li>
+      
+      <li>
+	If you only use the stats from a private network, disable access from non-internal IPs. This can be done in the config file, for example: <span class="command">conf['httpIPList'] = ['127.0.0.1', '192.168.1.*']</span>, which will constrain access to localhost and a private IP range 192.168.1.0 to 192.168.1.255. More examples can be found in <span class="path">umtskeeper.conf.sample</span>.<br><br>
+      </li>
+      
+      <li>
+	Use <a href="https://www.torproject.org/">TOR</a>. Available as a proxy daemon, as a specialized mozilla browser build, as USB live OS, and for smartphones (btw., play with the thought to free yourself from smartphones that are unfree, software- and hardware-wise).<br><br>
+      </li>
+      
+      <li>
+	Disable the internal HTTP daemon and use a 'real' webserver like Apache instead, with TLS encryption (SHA3 recommended). Not trivial to set up but if you already have a server then it's just a matter of some configuring and setting up the keys and certificates to have it serve on a HTTPS connection.<br>
+	Drawback: you will not be able to use the interactive features this way.<br><br>
+      </li>
+      
+      <li>
+	Disable the internal HTTP daemon and use SSH for mounting the remote filesystem. If you do remote monitoring you will likely already use SSH for logging into your remote machine. There is a wrapper for SSH that actually lets you mount remote directories into your local directory tree. It's called SSHFS.
+
+	<div class="code">
+	  <span class="command">sudo apt-get install sshfs<br>
+	  sudo mkdir /media/umtskeeper-server/<br>
+	  sudo chown &lt;myusername&gt; /media/umtskeeper-server/<br>
+	  sshfs &lt;username&gt;@&lt;serveraddress&gt;:/run/umtskeeper/; /media/umtskeeper-server/</span>
+	</div>
+	
+	With the above, you install SSHFS, make a mountpoint <span class="path">/media/umtskeeper-server/</span> on your local tree, and change the ownership to your local non-root user (so that you actually have full access), and mount the remote temporary path thereafter. In your umtskeeper configuration, make sure you have <span class="command">conf['httpServer']=False</span> and <span class="command">conf['writeHTMLStats']=True</span>. After the remote directory is mounted, you can simply klick on the <span class="path">umtskeeper.stat.html</span> file to open it. Read my note on SSH key authentication below.<br>
+	Drawback: you will not be able to use the interactive features this way.
+	<br><br>
+      </li>
+      
+      <li>
+	The simple way: <b>use SSH tunneling</b>. With tunneling, one (non-secured) protocol (HTTP in our case) rides on top of another (encrypted) protocol (SSH). You open an SSH connection to your remote server and tell SSH to forward a specific request port from your machine to the server port on the remote machine. SSH will do all the rest:<br>
+
+	<div class="code">
+	  <span class="command">ssh -N -L [localhost:]&lt;localport&gt;:&lt;serveraddress&gt;:&lt;serverport&gt; &lt;username&gt;@&lt;proxyaddress&gt;</span>
+	</div>
+	
+	<div class="shade-frame float-right sm">
+	  You do have a good, long, randomized password, don't you? Your data security depends on the strength of that password. Remember that your activity is intercepted, and that encrypted things are especially interesting! Better even, use <a href="http://www.debian-administration.org/articles/530">public key authentication</a> that can only be matched with <em>extremely</em> long passwords.<br>
+	  SSH with key authentication is more secure than HTTPS. First, the client is authenticated to the server, and the server is authenticated to the client. Second, there is no certificate to trust. For a man-in-the-middle attack, the attacker would need to have the public SSH key which is stored at the server.<br>
+	  Don't be confused when asked to generate an "RSA" key. That means the <a href="http://en.wikipedia.org/wiki/RSA_(algorithm)">RSA algorithm</a> as opposed to the corrupt and abandoned-to-be company <a href="http://en.wikipedia.org/wiki/RSA_Security">RSA Security</a> who primarily only share the name.
+	</div>
+
+	<p>
+	  There are (up to) four network addresses acting here. First, there is your local machine connecting to some remote machine on <span class="command">proxyaddress</span> through your SSH client. The SSH server on the proxy machine will in turn forward your requests to <span class="command">serveraddress:serverport</span>. If you leave away the <span class="command">localhost</span> at the beginning, your tunnel will be open for any machine that sends a request to your local machine at <span class="command">localport</span>.<br> 
+	  As you see, this can also be used to set up a simple proxy server, to let you tunnel through a firewall, for example. But the proxy and the actual server can be the same, as can be <span class="command">localport</span> and <span class="command">serverport</span>. The switch <span class="command">-N</span> tells SSH to not execute any command on the remote machine. Many tutorials also use the switch <span class="command">-f</span> to send the SSH process to the background once the connection is set up, and to free the command prompt for further use.
+	</p>
+	<p>
+	  So let's say, you have UMTSkeeper on your <span class="command">serveraddress</span>, running the internal HTTP daemon with the default configuration, listening on port 8000, which you would like to reach by the address <span class="path">http://localhost/</span> from your local machine. On your local machine, you type:
+	</p>
+	
+	<div class="clear"></div>
+
+	<div class="code">
+	  <span class="command">ssh -N -L localhost:80:&lt;serveraddress&gt;:8000; &lt;username&gt;@&lt;serveraddress&gt;</span><br>
+	  Privileged ports can only be forwarded by root.
+	</div>
+	
+	Gotcha! 'Privileged' ports are those below 1024, which are commonly reserved for standardized protocols. So if you want UMTSkeeper to appear on <span class="path">localhost:80</span>, you have to be root:
+	
+	<div class="code">
+	  <span class="command">sudo ssh -N -L localhost:80:&lt;serveraddress&gt;:8000; &lt;username&gt;@&lt;serveraddress&gt;</span><br>
+	  user@serveraddress's password:
+	</div>
+	
+	<div class="shade-frame float-right sm">
+	  Hint: with key authentication, SSH uses the key files from your <span class="path">&lt;home&gt;/.ssh/</span> directory. When acting as the local user <em>root</em> (with sudo or directly), it will look in <span class="path">/root/.ssh/</span>. As the key identifies your machine rather than a user, the key files can be shared by users of the same machine. This also means that you should protect your keys from getting into the hands of (unprivileged) users on that machine. There is the possibility of protecting the keys by an extra password.
+	</div>
+	
+	<p>
+	  In your browser, the remote UMTSkeeper will now be available with the address <span class="command">http://localhost/</span>. What happens is that SSH on your local machine now listens to port 80 (the standard HTTP port) and gets an HTTP request from the browser. The request is transmitted to the server through the encrypted tunnel and a request on port 8000 is made on the server machine. To UMTSkeeper, it will appear as a request <em>coming from its own localhost</em>. Therefore, <b>it should be configured to only respond to requests from localhost</b>. SSH will tunnel all data it receives upon the request back through the encrypted connection to your local machine.
+	</p>
+	<p>
+	  To end the SSH tunnel, you terminate the SSH client. This can be done by pressing <span class="command">CTRL+C</span>, or if you backgrounded it, the quick-and-dirty way is to just <span class="command">(sudo) killall ssh</span> (terminates all running SSH instances), or find out the process ID (PID) to kill a specific instance:
+	</p>
+	
+	<div class="clear"></div>
+	
+	<div class="code">
+	  <span class="command">ps aux | grep ssh</span><br>
+	  <br>
+	  root 846&nbsp;&nbsp;&nbsp;0.0 0.0 6684 &nbsp;&nbsp;4 ? Ss Jan13 0:00 /usr/sbin/sshd -D<br>
+	  user 20414 0.0 0.0 4080 &nbsp;32 ? Ss Jan13 0:02 /usr/bin/ssh-agent...<br>
+	  root <span class="alert">27282</span> 0.0 0.0 6452 500 ? Ss 22:49 0:00 ssh -Nf -L 80:serveraddress:80 user@serveraddress<br>
+	  user 27284 0.0 0.0 4388 836 pts/2 S+ 22:49 0:00 grep --color=auto ssh<br>
+	  <br>
+	  <span class="command">sudo kill 27282</span>
+	</div>
+      </li>
+    </ul>
+  </p>
+
+
+  <a name="license"></a>
+  <h2>License and Disclaimer</h2>
+  <h3>This program is released under a double license</h3>
+  <p>
+    Primarily, the <b>Hacktivismo Enhanced-Source Software License Agreement</b> (HESSLA), which can be found in full and with an additional statement about its objectives, at <a href="http://www.hacktivismo.com/about/hessla.php">http://www.hacktivismo.com/about/hessla.php</a>;<br>
+    and for compatibility reasons, the <b>GNU General Public License</b> (GPL), see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.
+  </p>
+  <p>
+    While the GPL contains the terms and conditions under which the software and derivative works thereof can be freely distributed, and thus is aimed primarily at software developers, the HESSLA, while granting the same rights and obligations to modify and distribute the software, contains additional terms that govern the use of the software. This makes the HESSLA function as a <b>contract between the author and the user</b>, rather than just being a copyleft agreement.<br>
+    In particular, the HESSLA contains objectives on security standards (section 9), the adherence of the use of the software to respecting human rights, political freedom and privacy standards (section 10), as well as special terms on the use of the software by governmental entities and governmental persons (section 14).<br>
+    For the purpose of including UMTSkeeper or portions thereof in GNU GPL licensed projects, UMTSkeeper is also licensed under the GPL. You may distribute UMTSkeeper or derivatives under the GNU GPL, provided that <b>your distribution is also subject to the HESSLA</b>.
+  </p>
+  
+  <h3>The HESSLA; full text is included with LICENSE.txt</h3>
+  <p>
+    UMTSkeeper is free software: you can redistribute it and/or modify it under the terms of the <b>Hacktivismo Enhanced-Source Software License Agreement</b> (HESSLA) as published by Hacktivismo, either version 1, or prior, of the License, or (at your option) any later version.<br>
+    By using UMTSkeeper, you express that you read and understood this license agreement, and that you are a Qualified Licensee as laid out in section 0.8, at the time you use UMTSkeeper, meaning that you will <b>not use this software for infringement of human rights or the right to privacy</b>. You will <b>not use this software for surveillance purposes or to otherwise spy on people, neither for doing any harm to a human being</b>.<br>
+    See the Hacktivismo Enhanced-Source Software License Agreement (HESSLA) at <a href="http://www.hacktivismo.com/">http://www.hacktivismo.com/</a> for more details.
+  </p>
+  
+  <h3>GNU GPL</h3>
+  <p>
+    UMTSkeeper is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.<br>
+    See the GNU General Public License for more details: <a href="http://www.gnu.org/licenses/gpl.txt">http://www.gnu.org/licenses/gpl.txt</a>
+  </p>
+  
+  <h3>Disclaimer</h3>
+  <p>
+    This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  </p>
+  <div class="sm">
+    <p>
+      And this should be common sense:<br>
+      Above statement includes additional charges you may receive from your operator by using this program, defects to your SIM card including but not limited to being PIN blocked, defects on your hardware, 3G service abuse ban etc. USE WITH CARE. The author of this program or authors of any of its dependencies have no responsibility for what may happen to you.
+    </p>
+    <p>
+      The author is not related in any way with any of the companies, being operators or modem manufacturers, other than being a customer to some of them. Logos and trademarks mentioned by this package belong to their respective owners.
+    </p>
+  </div>
+	
+  <div class="clear"></div>
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+</div>
+
+</body>
+</html>

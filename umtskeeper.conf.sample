@@ -1,0 +1,642 @@
+# UMTSkeeper example configuration file
+# Rename this file to 'umtskeeper.conf' to activate.
+
+# Lines starting with '#' are comments and thus are ignored.
+# Uncomment the values you want to change; the values in this file override the
+# default values in the program and can be subsequently overridden by
+# command line arguments.
+# Items marked as such: *** REQUIRED *** are required to be set when you want
+# to use UMTSkeeper for connecting a cell modem.
+
+
+
+##################
+### Connection ###
+##################
+
+# *** REQUIRED ***
+# deviceName:
+# Set device name.
+# This should be a unique identifier containing only letters and numbers.
+# Get it with lsusb (don't listen to what Sakis3G says).
+# This parameter is eventually required for device reset.
+# This is equivalent to the command line argument --devicename.
+# default: ''
+
+#conf['deviceName'] = ''
+
+
+# *** REQUIRED ***
+# ifaceName:
+# Network interface to monitor.
+# This parameter is required for transfer logging.
+# This is equivalent to the command line argument --iface.
+# default: 'ppp0'
+
+#conf['ifaceName'] = 'ppp0'
+
+
+# ifaceNAT:
+# Enable internet connection forwarding.
+# Network Address Translation: route traffic from a LAN (private IP, like
+# 192.168.x.y or 10.x.y.z) to the IP of the internet adapter (which often
+# is a public IP), and back, so that clients from the internal network can
+# use this internet connection. ifaceNAT is the name of the network adapter
+# that connects to the internet. Often, this is ppp0 (look it up with ifconfig
+# when the connection is up). Set to '' if no forwarding is required. NAT is
+# done using iptables.
+# This is equivalent to the command line argument --nat.
+# default: ''
+
+#conf['ifaceNAT'] = ''
+
+
+# monthStartDay:
+# Day of month when monthly count begins.
+# This is typically the day on which your monthly contract starts. Used in
+# statistics and with limitMonth.
+# This is equivalent to the command line argument --monthstart.
+# default: 1
+
+#conf['monthStartDay'] = 1
+
+
+# limitMonth:
+# Set monthly transfer limit (in bytes).
+# UMTSkeeper will disconnect if this limit is reached, which can be handy if you
+# else risk overcharging of your monthly limit. 0 means no limit.
+# Hint: set this some Mbytes lower than your real transfer limit so that you
+# keep a safety margin and a little reserve.
+# This is equivalent to the command line argument --limitmonth.
+# default: 0
+
+#conf['limitMonth'] = 0
+
+
+# doLimitDay:
+# Set a daily transfer limit (in bytes, 0 means no limit).
+# 'auto' will calculate a daily transfer limit based on the remaining amount of
+# transfer as per the limitMonth value.
+# This is equivalent to the command line argument --limitday.
+# default: 0
+
+#conf['doLimitDay'] = 'auto'
+#conf['doLimitDay'] = 0
+
+
+# *** REQUIRED ***
+# sakisSwitches:
+# Set switches to pass to Sakis3g.
+# These are parameters that you would give to Sakis3G if you would start it as a
+# stand-alone program. Example: --sakisswitches "--sudo --console"
+# This is equivalent to the command line argument --sakisswitches.
+# default: ""
+
+#conf['sakisSwitches'] = ""
+
+
+# *** REQUIRED ***
+# sakisOperators:
+# Set operators to pass to Sakis3g.
+# These are parameters that you would give to Sakis3G if you would start it as a
+# stand-alone program.
+# Example:
+# --sakisoperators "OTHER='USBMODEM' USBMODEM='19d2:0031' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0' APN_PASS='0'"
+# This is equivalent to the command line argument --sakisoperators.
+# default: ""
+
+#conf['sakisOperators'] = ""
+
+
+# sakisMaxFails:
+# Maximum of failed connection retries in sequence of Sakis3G until the program
+# gives up (actually it tries twice in a cycle).
+# This parameter should help to save on power, especially with battery driven
+# machines. Sakis3G is CPU intensive. So, if for any reason (modem unplugged
+# or other failure) the connection doesn't work then we'd better give up
+# constantly trying. See also sakisFailLockDuration.
+# This is equivalent to the command line argument --maxsakisfails.
+# default: 4
+
+#conf['sakisMaxFails'] = 4
+
+
+# sakisFailLockDuration:
+# Duration (in seconds) after which we retry to connect after the maximum of
+# failed connection retries was reached.
+# See also sakisMaxFails.
+# This is equivalent to the command line argument --sakisfaillockduration.
+# default: 300 (5 minutes)
+
+#conf['sakisFailLockDuration'] = 300
+
+
+# rebootNonModeswitched:
+# This set to True will try a system reboot if no (modeswitched) modem could be
+# detected on a fresh program startup. This may help on the Raspberry Pi where
+# we boot with the modem plugged, which sometimes fails to get mode-switched but
+# will work with a "warm" boot. This may take several reboots.
+# Use with caution: if the modem can not be detected at all, this will lead to
+# an endless reboot cycle. An alternative solution to this kind of problem
+# could be using the "binary" version of Sakis3G (which contains its own
+# usb_modeswitch).
+# default: False
+
+#conf['rebootNonModeswitched'] = False
+
+
+# wrongPinDelay:
+# Delay next connection try if we encounter a 'wrong pin' error.
+# This could simply mean that the modem is just not yet ready for connections.
+# We will try to connect once again after this delay and stop thereafter if
+# we still get the same error (usually, after 3 wrong PIN attempts the SIM
+# chip has to be unlocked with the PUK code).
+# A hint: removing the PIN or PUK-unlocking the SIM can usually be done by
+# putting the SIM into a mobile phone.
+# default: 60 (seconds)
+
+#conf['wrongPinDelay'] = 60
+
+
+# DNS probing:
+# Do periodic DNS lookups for the case that the modem is stalled and Sakis3G
+# does not detect this from the system status.
+# DNS caching at your internet provider will ensure minimal network congestion.
+# It will contact the DNS server only, never the given domain.
+# In case the DNS server could not be reached or if the domain name could not be
+# found, UMTSkeeper will try to reset the modem and re-establish the connection
+# thereafter.
+
+# DNSprobeDomain:
+# Domain name to look up. Use a domain which will not likely go
+# dead. Leave empty to disable DNS probing. 
+# default: 'google.com' (so, DNS probing is enabled by default)
+
+#conf['DNSprobeDomain'] = 'google.com'
+
+
+# DNSprobeCycle:
+# DNS probing cycle in seconds.
+# default: 600 seconds (every 10 minutes)
+
+#conf['DNSprobeCycle'] = 600
+
+
+
+##############################
+### Statistics and Logging ###
+##############################
+
+# writeStats:
+# Setting this to False will cause no numbers to be logged at all.
+# conf['writeStats']=False is equivalent to the command line argument
+# --nostats.
+# default: True (do log statistics)
+
+#conf['writeStats'] = True
+
+
+# statCycle:
+# statistics cycle in seconds
+# default: 4
+
+#conf['statCycle'] = 4
+
+
+# testCycle:
+# connection test interval (cycles of statCycle)
+# A value of 8 and statCycle=4 means that the connection is tested
+# every 32 seconds.
+# This is equivalent to the command line argument --testcycle (or
+# --interval for backwards compatibility).
+# default: 8
+
+#conf['testCycle'] = 8
+
+
+# statSecureInt:
+# interval of saving the statistics file to disk. By default,
+# the main statistics file (umtskeeper.stat) is written to /run/umtskeeper/
+# with every statCycle. Because /run/ usually resides in RAM (thereby
+# reducing wear of possible flash media), the stats would be lost in the
+# event of power outage or fatal errors. Therefore we secure this file to
+# disk periodically. Anywhere from 30 to 300 seconds could be reasonable here.
+# see also: statFilePath, tempPath
+# default: 60
+
+#conf['statSecureInt'] = 60
+
+
+# statFilePath:
+# Write statistics files to this location.
+# This is equivalent to the command line argument --statfilepath (or --statpath)
+# default: progPath (the path from where the program was started)
+
+#conf['statFilePath'] = progPath #default
+#conf['statFilePath'] = '/var/log/umtskeeper/' #for example
+
+
+# tempPath:
+# Write temporary files to this location.
+# Usually there should be no reason to change this. The default is to make a
+# subdirectory in '/run/' or '/var/run/' (whichever is found), which is a
+# tmpFS (ramdisk) filesystem on most platforms, and therefore the contents
+# are lost on shutdown.
+# This is equivalent to the command line argument --temppath.
+# default: '/run/umtskeeper/'
+
+#conf['tempPath'] = '/run/umtskeeper/'
+
+
+# logOnly:
+# Set this to True to only log statistics on a connection, not connect
+# a 3G device. Recommended only for (W)LAN devices.
+# This is equivalent to the command line argument --logonly.
+# default: False (do connect)
+
+#conf['logOnly'] = False
+
+
+# printMsg:
+# Set to False to suppress screen output.
+# Setting printMsg=False is equivalent to the command line argument --silent.
+# default: True
+
+#conf['printMsg'] = True
+
+
+# logMsg:
+# Log to file. See also: logFile.
+# This is equivalent to the command line argument --log.
+# default: False (don't write logfile)
+
+#conf['logMsg'] = False
+
+
+# logFile:
+# Full path of the logfile. There's usually no reason to change this.
+# This is equivalent to the command line argument --logfile. See also logMsg.
+# default: '/var/log/umtskeeper.log'
+
+#conf['logFile'] = '/var/log/umtskeeper.log'
+
+
+
+##############
+### Graphs ###
+##############
+
+#1 kByte = 1000 bytes, 1 MByte = 10^6 bytes
+
+# rateThreshold:
+# Lower threshold for counting rate in average rates (bytes/s).
+# This helps with the average rate numbers, as we rule out those occasional
+# small packets which are sent as the connection overhead.
+# default: 250 (Bytes/s)
+
+#conf['rateThreshold'] = 250
+
+
+# secGraphMaxX:
+# Width of second graph (in statIntervals).
+# default: 100
+
+#conf['secGraphMaxX'] = 100
+
+
+# There are 4 sets of graph settings:
+#
+# secGraph - used for the frequently updated rate graph ('seconds' graph)
+# and for all the 'rate' graphs.
+# daysGraph: For the 'two months transfer' graph.
+# hoursGraph: For the '48 hours transfer' graph.
+# hoursAvgGraph: For the 'average transfer' graphs.
+
+# The Parameters are:
+# scale: Scale of the y-axis. (kBytes/pixel)
+# markMinor: Distance of minor scale marks on y-axis. (kBytes/s)
+# markMajor: Distance of major scale marks and numbers on y-axis. (kBytes/s)
+
+#conf['secGraph'] = {'scale': 2, 'markMajor': 20, 'markMinor': 10}
+#conf['daysGraph'] = {'scale': 50000, 'markMajor': 1000000, 'markMinor': 200000}
+#conf['hoursGraph'] = {'scale': 2000, 'markMajor': 100000, 'markMinor': 20000}
+#conf['hoursAvgGraph'] = {'scale': 1000, 'markMajor': 50000, 'markMinor': 10000}
+
+
+
+#################################
+### HTML Page and HTTP Server ###
+#################################
+
+# writeHTMLStats:
+# Set this to 'True' if you want a HTML file generated on disk
+# (the internal server does not write a file). The HTML file is by default
+# written to the temp dirctory: /run/umtskeeper/umtskeeper.stat.html or
+# /var/run/umtskeeper/umtskeeper.stat.html. If a htmlPath is given
+# then the HTML file is copied there.
+# This is equivalent to the command line argument --htmlstats.
+# default: False
+
+#conf['writeHTMLStats'] = False
+
+
+# htmlPath:
+# Path to copy the generated HTML file to.
+# This can be a directory inside the docroot of an external webserver, or any
+# other location like the program directory itself. An empty value ('') means
+# that the file is not copied anywhere but can be found in the temp dir
+# (see writeHTMLStats).
+# Setting a htmlPath implies conf['writeHTMLStats']=True.
+# This is equivalent to the command line argument --htmlpath.
+# default: ''
+
+#conf['htmlPath'] = ''
+
+
+## Initial values for the HTML page ##
+#------------------------------------#
+
+# htmlReloadInterval:
+# auto-refresh cycle of HTML page in seconds.
+# (0 means no refresh)
+# default: 4
+
+#conf['htmlReloadInterval'] = 4
+
+
+# htmlShowLog:
+# show a frame with the log.
+# default: False
+
+#conf['htmlShowLog'] = False
+
+
+# htmlShowGraphs:
+# how much graphics to show. 0 = none, 1 = minimal, 2 = all
+# default: 2
+
+#conf['htmlShowGraphs'] = 2
+
+
+# httpServer:
+# Set this to True to enable the small internal webserver.
+# This can be useful if umtskeeper runs on a standalone LAN gateway. From the
+# local machine, the server can be reached at http://localhost:8000/, from
+# other machines at http://ip-of-gateway:8000/, by default (see also httpPort).
+# If conf['writeHTMLStats']=False then the HTML page is generated on demand
+# only. Saves a small amount of power.
+# If you turn te webserver on, also set conf['writeHTMLStats']=True, else there
+# will be nothing to serve.
+# This is equivalent to the command line argument --httpserver.
+# default: False
+
+#conf['httpServer'] = False
+
+
+# httpPort:
+# The Port on which the webserver is listening. While the standard HTTP
+# port number is 80, this deliberately defaults to a different port, so that
+# it doesn't come in the way of another webserver possibly running on the
+# same machine.
+# This is equivalent to the command line argument --httpport.
+# default: 8000
+
+#conf['httpPort'] = 8000
+
+
+# httpWhiteList:
+# Whitelist of files which the server is allowed to serve.
+# This is a safety precaution because we are probably running the server with
+# root privilege which is generally a bad idea. There's usually no need to
+# change this list, unless you want to conveniently serve something else as
+# well. Setting this to False will make the server happily serve any static file
+# that is in the htmlPath. This is ABSOLUTELY NOT RECOMMENDED if you run
+# UMTSkeeper as root, as it would potentially open system access to the
+# internet. It *should* be safe but I can say nothing about the security of
+# those Python modules. You have been warned.
+# default: ['', 'umtskeeper.stat.html', 'style.css', 'favicon.ico', 'robots.txt']
+
+#conf['httpWhiteList'] = ['', 'umtskeeper.stat.html', 'style.css', 'favicon.ico', 'robots.txt']
+
+
+# httpIPList:
+# Whitelist of client IPs to which the server is allowed to serve.
+# This can be used to lock the server against unauthorised access. IP ranges by
+# '*' wildcard are possible (see examples). Setting this to False will let it
+# serve the stats page to all world. To view from the local computer (where
+# UMTSkeeper runs), add '127.0.0.1'.
+# default: False
+
+#example: local host and single IP in private network
+#conf['httpIPList'] = ['127.0.0.1', '192.168.1.5']
+
+#example: IP range (192.168.1.1 to 192.168.1.255)
+#conf['httpIPList'] = ['192.168.1.*']
+
+#example: IP ranges (192.168.1.10 to 192.168.1.19) and (192.168.1.100 to 192.168.1.199)
+#conf['httpIPList'] = ['192.168.1.1*']
+
+
+
+###########################
+### Dynamic DNS Updater ###
+###########################
+
+# Notice that all the relevant config variables must be filled in in order to 
+# turn on the dDNS updater. This is dDNSUseFreeDNSMethod and 
+# dDNSUpdateURIs for the freedns method, and dDNSSite, dDNSHosts, dDNSUsername 
+# and dDNSPassword for the Members NIC method.
+# Using the DNS updater will make UMTSkeeper keep a 'statistics' file to store 
+# some temporary data. If you set conf['writeStats']=False, that file will 
+# only contain the data relevant to dDNS.
+
+# If using the DNS updater, this config file will contain sensitive data
+# (such as passwords). It should therefore be protected from being readable by
+# anyone else than the user who invokes UMTSkeeper, by
+# chmod 600 umtskeeper.conf
+
+
+# dDNSProg:
+# Use an external program for DDNS update.
+# Enter the full program call here. Specifying an external updater will disable
+# the internal updater. You might want to use an external updater tool that can
+# be called by command line, if your DNS provider uses a proprietary update
+# protocol or if special DDNS features are needed which are not implemented in
+# UMTSkeeper. Examples for command line tools for Linux are ddclient and
+# ipcheck.py
+# default: '' (use internal updater)
+
+#conf['dDNSProg'] = ''
+
+
+## freedns.afraid.org ##
+#----------------------#
+
+# dDNSUseFreeDNSMethod: 
+# freedns.afraid.org uses a proprietary method that
+# works in a simple way: you only need to request an URI that contains a hash
+# for your login and the hosts to update. This might apply to other providers
+# as well. Set this to True to enable the 'freedns' updater.
+# default: False
+
+#conf['dDNSUseFreeDNSMethod'] = False
+
+
+# dDNSUpdateURIs: 
+# List of URIs to use with the 'freedns' updater.
+# This is the "Direct URL" that is listed on http://freedns.afraid.org/dynamic/.
+# If you enable "Link updates of the same IP together" on the freedns website
+# then you should only enter one URI here to have all updated at once, else
+# enter a comma-separated list, like so:
+# conf['dDNSUpdateURIs'] = 'http://freedns.afraid.org/dynamic/update.php?IOZBGFDOjmntew7zb=,http://freedns.afraid.org/dynamic/update.php?IOZBGFDFGOol8tfgd='
+# default: ''
+
+#conf['dDNSUpdateURIs'] = ''
+
+
+## Members NIC Update API (dyndns style update method) ##
+#-------------------------------------------------------#
+# This is a standard update method used by many DDNS services, like
+# dyndns.com or no-ip.com.
+
+
+# dDNSSite:
+# This is the update page to call.
+# Tested example: no-ip.com
+#conf['dDNSSite'] = 'dynupdate.no-ip.com/nic/update'
+# Tested example: dyndns.com
+#conf['dDNSSite'] = 'members.dyndns.org/nic/update'
+# default: ''
+
+#conf['dDNSSite'] = ''
+
+
+# dDNSUsername: 
+# Username you registered with the DNS provider.
+#conf['dDNSUsername'] = ''
+
+# dDNSPassword: 
+# Password you registered with the DNS provider.
+#conf['dDNSPassword'] = ''
+
+
+# dDNSHosts: 
+# Host names to update. This should be one or more domain names you
+# want to update, in a comma-separated list.
+
+#conf['dDNSHosts'] = ''
+
+
+# dDNSUseHTTPS and dDNSUseHTTP:
+# The transport protocol to use for the DNS update.
+# The recommended method is to use an encrypted connection (HTTPS) only. HTTP
+# connection will be used as a fall-back if enabled. Be aware that with HTTP,
+# your username and password are sent in plain text over the internet.
+# defaults: conf['dDNSUseHTTPS'] = True, conf['dDNSUseHTTP'] = False
+
+#conf['dDNSUseHTTPS'] = True
+#conf['dDNSUseHTTP'] = False
+
+
+# dDNSPort: 
+# The Server port to use for the DNS update.
+# This applies only to HTTP connections (see conf['dDNSUseHTTP']).
+# A reason to use a port other than the standard HTTP port 80 would be if you
+# are behind a transparent proxy, that caches your port 80 traffic but still
+# allows you to access HTTP sites by port 80. You would not notice that it is
+# there but a server would see the IP of the proxy instead of yours. You can
+# detect such a proxy by comparing the IP given by a webpage that shows
+# "your IP", to the output of the command 'ip addr'. Your DDNS
+# provider might provide an alternative port to use for circumventing the
+# proxy. In this case you might also need to use automatic IP detection
+# (see conf['dDNSSendIP']).
+# default: 80
+# alternate for dyndns.com: 8245
+
+#conf['dDNSPort'] = 80
+
+
+# dDNSSendIP:
+# Whether to send your IP in the update request or let the server guess.
+# Not sending your IP (False) should normally
+# cause the server to "detect" your IP automatically (the server knows from
+# where the request originated). This can be used if you are behind a proxy
+# and have no other means of determining your own IP (e.g. you want to log your
+# internet traffic through a router and webpages do not show your real IP).
+# See also conf['ipWebsite'].
+# default: True
+
+#conf['dDNSSendIP'] = True
+
+
+# ipWebsite: 
+# Use a webserver to get your IP.
+# This is useful if you use UMTSkeeper to only log traffic from your computer
+# through your private network but still use the DDNS updater. There are many
+# websites to choose from that show your IP:
+# http://ecosia.org/search.php?q=show+my+ip - choose one that shows your IP at
+# the top-most location (ideal is IP and nothing else). The program will try
+# and extract the IP from the page received.
+# Enter a full URL here, including "http://".
+# default: ''
+
+#conf['ipWebsite'] = ''
+
+
+## E-Mail notification on IP change ##
+#------------------------------------#
+# UMTSkeeper can send a message whenever the IP changes, containing the new IP.
+# This feature can be used along with the internal DNS updater or on its own.
+
+# If using the e-mail notification, this config file will contain sensitive data
+# (such as your SMTP password). It should therefore be protected from being
+# readable by anyone else than the user who invokes UMTSkeeper, by
+# chmod 600 umtskeeper.conf
+
+# Supports SMTP servers with "login" authentication, by TLS or StartTLS
+# connection. All parameters (toAddress, smtpServer, smtpUsername, smtpPassword)
+# must be given.
+
+
+# mailNotification:
+# Enable (True) or disable (False) the e-mail notification feature.
+# default: False
+
+#conf['mailNotification'] = False
+
+
+# toAddress:
+# Recepient address.
+
+#conf['toAddress'] = ''
+
+
+# smtpServer:
+# Your SMTP server/relay for outgoing e-mail.
+
+#conf['smtpServer'] = ''
+
+
+# smtpUseTLS, smtpPort:
+# Connection method to use: TLS (True) or StartTLS (False), and the port number
+# which the SMTP server listens on. Usually, with StartTLS this is port 25 
+# (starts with unencrypted SMTP, then switches to TLS),
+# and with TLS it is port 465.
+# defaults: smtpUseTLS=False (use StartTLS), smtpPort=25 (default SMTP port)
+
+#conf['smtpUseTLS'] = False
+#conf['smtpPort'] = 25
+
+
+# smtpUsername, smtpPassword:
+# User name and password for authentication with the SMTP server.
+
+#conf['smtpUsername'] = ''
+#conf['smtpPassword'] = ''
+
+
+# machineName:
+# Identifier for this computer. This can be any string which will be used in the
+# mail subject, like "[UMTSkeeper] your modem box: New IP is xxx.xxx.xxx.xxx"
+
+#conf['machineName'] = 'your modem box'

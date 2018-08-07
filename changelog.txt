@@ -1,0 +1,235 @@
+2.07
+
+20151004
+- Fixed finish init before resetmonth, resettransferstats, resetratestats
+  command parsing.
+- Fixed remaining MBytes/day display.
+- Fixed wrong transfer counters if the connection is up already on program
+  launch.
+
+20150927
+- Fixed a typo. (thanks Robert)
+
+20150924
+- Fixed unexpected program termination in DDNS updater if the provider fails to
+  return an IP on 'good' update message. Also added some more handling for
+  out-of-specification returns. (thanks Johan)
+- Added Python version to log on startup.
+- Removed CPU hungry stat variable sorting which is really only a debugging
+  convenience.
+  
+20150315
+- Fixed variable reference error in the update routine.
+
+20150228.1000
+- Fixed a variable reference fatal error in the DNS updater that was introduced 
+  in 2.07. (thanks Tomas)
+
+20150220
+- Added option to reboot the system if an already attached modem could not 
+  be mode-switched. This proved to work on systems such as the Rasperry Pi which
+  may be powered on with the modem attached.
+- Added option for e-mail notification on IP change. (thanks Jan)
+- Replaced external USB reset program by Python function. This eliminates 
+  compatibility issues with ARM architectures. (thanks Matthias)
+- Updated the included Sakis3G to newest version.
+- Fixed initialisation routine where it would cause logic failure.
+- Cleaned up main connection loop.
+
+
+2.06
+
+20140614
+- Added periodic DNS lookup for the case that the modem hangs and Sakis3G does
+  not detect this from the system status. Because this should happen very rarely
+  if ever, I could not really test it. Therefore any feedback on this function
+  is welcome.
+  Adds config: conf['DNSprobeDomain'], conf['DNSprobeCycle']
+- Cosmetic changes to HTML interface.
+
+
+2.05
+
+20140515
+- Minor cleanup in code and log messages (no reason for upgrade).
+
+20140503
+- Finally made help text (and python docstring) work.
+- Corrected version number (20140430 build was still labeled 2.04-20140220).
+
+20140430
+- Added the Sakis3G program (binary-free version) to the download. This should 
+  simplify download and install.
+- Fixed "variable referenced before assignment" error when trying to retrieve a
+  Sakis3G error message.
+- A little cosmetics with the logs.
+
+
+2.04
+
+20140220
+- Added check on date change, if year changed.
+- Fixed "fail to update stats on new month as per monthstartday setting".
+- Fixed menu buttons to default to show all graphs.
+
+20140120
+- Enabling the internal webserver by command line argument would disable writing
+  a HTML file to disk, regardless of the 'writeHTMLStats' configuration.
+
+20140119
+- Fixed a bug that made the DNS updater work incorrectly if user chose to not 
+  keep statistics.
+- Fixed bug that invoked DNS update on every HTML page reload if you had done a 
+  manual update (no harm done, only log annoyance).
+
+20140112
+- Added catching of errors while loading the stats file. It will now simply 
+  ignore a failure to execute the stats file(s). The malformed stats file will 
+  be saved as umtskeeper.stat.err (thanks Stanislav)
+- Removed too alarming message "No PID file found" on normal startup. This is 
+  only necessary when a "stop" command was invoked.
+
+20140107.2350
+- Changed log message ("DOWN") on program start when Sakis3G connect is 
+  called. I'm not sure about the reliability of information if the modem is 
+  reported as "already connected". Often enough, my modem LED signalled 
+  'online' when indeed the internet was unreachable. Therefore, connect in any 
+  case and just change the log message.
+- Added a 'logLevel' setting. This may only be useful in development.
+- Don't store backups of the stats file in the log file. During half a year of
+  use, the statistics were never lost with me (unlike in v.1), meaning that the
+  clean shutdown works well enough. This backup can be switched on by setting 
+  conf['logLevel']=3 or higher.
+
+
+2.03
+
+20140107.2300
+- Fixed unhandled exception in dDNS updater. (thanks Marcus)
+
+20140107
+- Fixed "automatic reload of HTML file forwards to root path of the server
+  instead". (thanks Marco)
+
+20140106
+- Fixed "stats are not aware of new year until the configured monthstartday has
+  passed". Happy new Year :)
+- Fixed "global name 'httpD' is not defined" error in cleanup function on
+  program exit.
+
+20131205
+- Fixed "style sheet not found when conf['htmlPath'] is given". (thanks Stefano)
+- Made stats page react immediately to button clicks when
+  conf['writeHTMLStats']=True.
+- Made path configurations also work without the trailing slash.
+
+20131203
+- Fixed "404 error due to HTML file not written although
+  conf['writeHTMLStats']=True". (thanks Stefano)
+
+20130806
+- Minor fixes.
+
+20130722.22
+- Shutdown HTTP socket on program exit.
+- Added retry if IP could not be obtained from URL. (fixed with .22)
+
+20130720
+- Delay IP updater with logonly option when connection established (wait for
+  network ready).
+
+20130718
+- Added log view and some interactivity to HTML page.
+- Added some config vars for HTML page.
+- Added robots.txt for discouraging spiders from indexing the stats page.
+- Security Fix: calling Sakis3G through shell opened shell access to user.
+
+
+2.02
+
+20130717.18
+- Fixed bug in determining config changes in DDNS updater.
+
+20130717
+- Added Dynamic DNS (DDNS) update client.
+
+
+2.01
+
+20130709.00
+- Fixed type error with "wron PIN" message.
+- Changed graph to show expected 95-percentile instead of current median (which
+  turnd out rather meaningless).
+
+20130707.17
+- Fixed Sakis calls with writing to log when program did not wait for Sakis to
+  finish.
+- Fixed connect command.
+- Fixed type error on USB reset. (thanks Jan)
+- Fixed "try to reset USB device which is not present". (thanks Jan)
+- Fixed "program exit if old process not found".
+
+20130706
+- Tweaked the graphs a bit.
+- Added "connect" command, that causes connection to resume if it was suspended
+  by --sakismaxfails.
+- Added IP whitelisting for HTTP server.
+
+
+2.00
+
+20130702
+Umtskeeper2 is a complete re-write of the program in Python.
+
+Why Python?
+  Because it is a proper programming language. BASH scripting is good for some
+  things and poor at other things. It's really only piling calls of mini-
+  programs together. The syntax becomes accordingly complicated. Python is a
+  powerful language with lots of advantages for this purpose, among them:
+- Powerful data handling: lists, dictionaries, type conversions. For example,
+  getting a median from a list of values, which involves sorting of the list in
+  nested loops, can be a one-liner in Python: median=sorted(list)[len(list)/2].
+- Floating-point math! Yes, my computer sports a coprocessor :) Yours too?
+- Lots of modules for just about anything are included. For example, UMTSkeeper
+  has its own mini-webserver now which is only a few lines of code and the
+  inclusion of a standard module.
+- Comes with a debugger. Frustration with debugging is little. Things tend to
+  work. Documentation and examples are plenty.
+- Runs quite fast. Although it is still an interpreter language, the
+  interpreter will store the program as intermediate code on first run, so that
+  it will not have to be interpreted constantly. With UMTSkeeper2, your machine
+  will therefore be that 1% more enveronmental-friendly :)
+- Not least, there's rat in it.
+
+What's new?
+- Support for a configuration file, so there's an end to endless command lines.
+- A few parameters were added, notably:
+  maxSakisFails, sakisFailLockDuration: prevent Sakis3G from draining your
+    battery if no modem is plugged.
+  writeHTMLStats: disable writing of the HTML file.
+  --noroot switch: force all data to be written to program directory, so that
+    we don't need root access.
+- Data is now primarily kept in the system temporary directory which is a
+  virtual file system in RAM. This is especially good with devices like the
+  Raspberry Pi that run from an SD card.
+- Proper program shutdown, also when killed by ctrl+c or through other signals.
+  Program can be ended with the command "umtskeeper quit".
+- HTTP server to serve the statistics page(s). Enable it with
+  --httpserver (commandline) or conf['httpServer']=True (configfile). By
+  default, it serves at port 8000, so the page is reached from your network at
+  http://ip.of.machine:8000/
+- More sophisticated transfer statistics. You'll see that I like to play with
+  them. Graphs are now in SVG format. Much of this is experimental and will be
+  subject to change in the upcoming versions. Your old statistics will be
+  converted to a new format but they will not be that accurate. There are
+  commands to reset these numbers.
+
+What next? A few things are still planned:
+- Investigate running the thing as a real deamon, which should allow to run it
+  without log-in on stand-alone headless systems. Install/uninstall,
+  rc-scripts, logrotate.
+- Basic dynamic DNS update client - good for remote monitoring.
+- Probably make some more use of the webserver.
+- Get connect/disconnect markers into the graphs.
+
+
