@@ -1,50 +1,50 @@
 #! /usr/bin/env python
 
 """
-UMTSkeeper is a wrapper which handles automatic UMTS internet keep-alive, 
+UMTSkeeper is a wrapper which handles automatic UMTS internet keep-alive,
 for the Sakis3G script by Sakis Dimopoulos.
 
 Copyright: Written by Markus Petz (Mintaka), 2012-2014
 Website: http://mintakaconciencia.net/squares/umtskeeper/
 
-Licensed under the Hacktivismo Enhanced-Source Software License Agreement, 
-Version 0.1 http://www.hacktivismo.com/about/hessla.php 
+Licensed under the Hacktivismo Enhanced-Source Software License Agreement,
+Version 0.1 http://www.hacktivismo.com/about/hessla.php
 and GNU General Public Licence http://www.gnu.org/licenses/gpl-3.0.html.
 
 UMTSkeeper comes with ABSOLUTELY NO WARRANTY. This is free software, and you
-are welcome to redistribute it under certain conditions. See the licenses for 
+are welcome to redistribute it under certain conditions. See the licenses for
 details.
 
 Functionality:
   - Connect the modem automatically and re-connect whenever possible.
   - Optionally, break the connection when a pre-set transfer limit is reached.
-  - Basic IPtables setup for NAT (forwarding a single internet connection to the 
+  - Basic IPtables setup for NAT (forwarding a single internet connection to the
     internal network, aka. internet connection sharing).
   - Dynamic DNS (DDNS) update client to update with standard DDNS services.
-  - Transfer statistics in HTML which can be served by its own tiny webserver or 
+  - Transfer statistics in HTML which can be served by its own tiny webserver or
     your external webserver of choice, or read directly from disk.
 
 Usage: umtskeeper [COMMAND]
-  or   umtskeeper --sakisoperators "<operators>" --sakisswitches "<switches>" 
+  or   umtskeeper --sakisoperators "<operators>" --sakisswitches "<switches>"
        --devicename <devicename> --ifacename <iface> [OPTIONS] [PARAMETERS]
 
 COMMANDS:
  connect      Retry connecting for example if connecting was suspended by
               --sakismaxfails.
  resetmonth   Manually reset the monthly transfer counter.
- resettransferstats 
-              Reset the transfer amount counters. This will not reset the rate 
+ resettransferstats
+              Reset the transfer amount counters. This will not reset the rate
               counters. Data will be deleted without asking again.
- resetratestats     
-              Reset the rate counters. This will not reset the transfer amount 
+ resetratestats
+              Reset the rate counters. This will not reset the transfer amount
               counters. Data will be deleted without asking again.
- stop, quit, end    
+ stop, quit, end
               Any of these will terminate a running UMTSkeeper.
 
 OPTIONS:
  --log        Log to file (default: don't log). See also: --logfile, --iface.
- --logonly    Do not connect to internet. Use this for only logging statistics 
-              on a connection. Recommended only for (W)LAN devices. 
+ --logonly    Do not connect to internet. Use this for only logging statistics
+              on a connection. Recommended only for (W)LAN devices.
               (default: do connect)
  --noroot     Force running without requiring root privileges.
  --nostats    Don't write statistics files. (default: write them)
@@ -56,79 +56,79 @@ OPTIONS:
 
 PARAMETERS:
  --conf </path/to/configfile>
-        Specify a configuration file to use. All command line parameters can 
-        also be specified in a configuration file. UMTSkeeper will look for 
-        <progPath>/umtskeeper.conf (1). The configuration goes this way: 
-        (1) overrides the program defaults, and values in a config file given 
-        by the --conf command line directive overrides (1). Further, any 
-        parameters given on the command line will override the values from the 
-        config files. See the example config file umtskeeper.conf.sample for 
+        Specify a configuration file to use. All command line parameters can
+        also be specified in a configuration file. UMTSkeeper will look for
+        <progPath>/umtskeeper.conf (1). The configuration goes this way:
+        (1) overrides the program defaults, and values in a config file given
+        by the --conf command line directive overrides (1). Further, any
+        parameters given on the command line will override the values from the
+        config files. See the example config file umtskeeper.conf.sample for
         further explanation. (default: none)
  --devicename "<devicename>"
-        Set device name. This should be a unique identifier containing only 
+        Set device name. This should be a unique identifier containing only
         letters and numbers, as given by lsusb.
         This parameter is eventually required for device reset.
-        Example: lsusb may return the device name string: 
-        ZTE WCDMA Technologies MSM MF110/MF627/MF636. Any unique part of this 
+        Example: lsusb may return the device name string:
+        ZTE WCDMA Technologies MSM MF110/MF627/MF636. Any unique part of this
         name, like "MF636" would be appropriate.
  --htmlpath "<path>"
-        Document path of external webserver to copy the stats HTML file to. 
+        Document path of external webserver to copy the stats HTML file to.
         (default: empty - do not copy)
  --httpport <port>
-        Port on which the internal webserver is listening. Setting the port 
+        Port on which the internal webserver is listening. Setting the port
         implies --httpserver. (default: 8000)
  --iface <iface>
         Network interface to monitor. (default: ppp0)
         This parameter is required for transfer logging.
  --limitday <limit>
-        Set daily transfer limit (in bytes). See also --limitmonth. 
+        Set daily transfer limit (in bytes). See also --limitmonth.
         (default: 0 = no limit)
  --limitmonth <limit>
-        Set monthly transfer limit (in bytes). See also --monthstart, 
+        Set monthly transfer limit (in bytes). See also --monthstart,
         --limitday. (default: 0 = no limit)
  --logfile "<file>"
-        To specify an alternative log file. This implies the option 'log'. 
+        To specify an alternative log file. This implies the option 'log'.
         (default: /var/log/umtskeeper.log)
  --monthstart <day>
-        Day of month when monthly transfer count begins. This is typically the 
-        day on which your monthly contract starts. See also 
+        Day of month when monthly transfer count begins. This is typically the
+        day on which your monthly contract starts. See also
         --limitmonth, --limitday. (default: 0 = no limit)
  --nat <iface>
-        Enable internet connection forwarding (NAT). <iface> is the name of the 
-        network adapter that connects to the internet. Often, this is ppp0 
-        (look it up with ifconfig when the connection is up). Set to 'no' if no 
+        Enable internet connection forwarding (NAT). <iface> is the name of the
+        network adapter that connects to the internet. Often, this is ppp0
+        (look it up with ifconfig when the connection is up). Set to 'no' if no
         forwarding is required. (default: no)
  --sakisfaillockduration <s>
-        Duration (in seconds) after which we retry to connect after the maximum 
-        of failed connection retries was reached. See also --sakismaxfails. 
+        Duration (in seconds) after which we retry to connect after the maximum
+        of failed connection retries was reached. See also --sakismaxfails.
         (default: 300)
  --sakismaxfails <n>
-        Maximum of failed connection retries by Sakis3G in sequence until the 
-        program gives up. This parameter should help to save on power when a 
-        connection can not be established, since Sakis3G is CPU intensive. 
+        Maximum of failed connection retries by Sakis3G in sequence until the
+        program gives up. This parameter should help to save on power when a
+        connection can not be established, since Sakis3G is CPU intensive.
         See also --sakisfaillockduration. (default: 4)
  --statfilepath "<path>" (formerly --statpath")
         Write statistics files to this location. (default: script path)
  --testcycle <s> (formerly --interval)
-        Test connection in intervals of s statistics cycles (1 cycle is about 4 
+        Test connection in intervals of s statistics cycles (1 cycle is about 4
         seconds). (default: 8).
  --temppath "<path>"
-        Specify alternative path for temporary files. The default is a 
-        subdirectory in /run/ or /var/run/ (whichever is found), which is a 
-        tmpFS (ramdisk) filesystem on most platforms, to minimise disk write 
+        Specify alternative path for temporary files. The default is a
+        subdirectory in /run/ or /var/run/ (whichever is found), which is a
+        tmpFS (ramdisk) filesystem on most platforms, to minimise disk write
         access.
  --sakisswitches "<switches>"
-        Set switches to pass to Sakis3g, as if using Sakis3G standalone. 
+        Set switches to pass to Sakis3g, as if using Sakis3G standalone.
         This is a required parameter.
-        Example: "USBINTERFACE='0' OTHER='USBMODEM' USBMODEM='12d1:140c' 
-        SIM_PIN='1234' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0' 
+        Example: "USBINTERFACE='0' OTHER='USBMODEM' USBMODEM='12d1:140c'
+        SIM_PIN='1234' APN='CUSTOM_APN' CUSTOM_APN='provider.com' APN_USER='0'
         APN_PASS='0'"
  --sakisoperators "<operators>"
         Set operators to pass to Sakis3g, as if using Sakis3G standalone.
         This is a required parameter.
         Example: "--sudo --console"
 """
-  
+
 #Acknowledgements:
 # Brenton Scott, who continues to maintain Sakis3G (https://github.com/trixarian)
 # Kal, author of ipcheck.py (http://ipcheck.sourceforge.net/)
@@ -492,16 +492,16 @@ class DNSUpdater(object):
     self.emailEnabled = False
     self.gotIP = False
     self.gotNewIP = False
-    
+
     if conf['dDNSProg'] != '': #use external prog
       self.enabled = True
     elif \
       (conf['dDNSUseFreeDNSMethod'] and conf['dDNSUpdateURIs'] != '') \
       or \
-      ( (conf['dDNSSite'] != '') and 
-        (conf['dDNSHosts'] != '') and 
-        (conf['dDNSUsername'] != '') and 
-        (conf['dDNSPassword'] != '') 
+      ( (conf['dDNSSite'] != '') and
+        (conf['dDNSHosts'] != '') and
+        (conf['dDNSUsername'] != '') and
+        (conf['dDNSPassword'] != '')
       ):
         self.enabled = True
         self.dDNSEnabled = True
@@ -543,11 +543,11 @@ class DNSUpdater(object):
 
     return ''
   #end GetIP_web
-  
-  
+
+
   def GetIP(self):
     self.gotIP = False
-    
+
     if conf['ipWebsite'] != '': #get IP from website
       ip = self.GetIP_web(conf['ipWebsite'])
       if ip == '':
@@ -569,14 +569,14 @@ class DNSUpdater(object):
       (ip[:3] == '10.') or \
       (ip[:3] == '172' and ip[6] == '.' and (int(ip[4:6]) >= 16 and int(ip[4:6]) <= 31)) or \
       (ip == '127.0.0.1'):
-        
+
       PrintMessage('Got a private IP for interface %s: %s, but would need a public IP to update DNS. Perhaps you are connected to the internet through a gateway/firewall with address translation. In this case, your public IP can be determined with the help of an external webserver. Set a website address that returns your IP, using conf[\'ipWebsite\'].' % (conf['ifaceName'], ip), False)
     else:
       self.gotIP = True
-    
+
     return(ip)
   #end GetIP
-  
+
 
   def GetConfHash(self):
     return hashlib.sha256(conf['dDNSSite'] + str(conf['dDNSUseHTTP']) + str(conf['dDNSUseHTTPS']) + str(conf['dDNSPort']) + \
@@ -586,12 +586,12 @@ class DNSUpdater(object):
   def MailNotify(self, ip):
     import smtplib
     from email.mime.text import MIMEText
-    
+
     msg = MIMEText('Hi,\n\nThe IP of %s just changed to\n%s\n\nRegards,\nUMTSkeeper' % (conf['machineName'], ip))
     msg['Subject'] = '[UMTSkeeper] %s: New IP is %s' % (conf['machineName'], ip)
     msg['From'] = conf['smtpUsername']
     msg['To'] = conf['toAddress']
-    
+
     try:
       if conf['smtpUseTLS']: #use TLS connection method
         smtpserver = smtplib.SMTP_SSL(conf['smtpServer'], conf['smtpPort'])
@@ -599,13 +599,13 @@ class DNSUpdater(object):
         smtpserver = smtplib.SMTP(conf['smtpServer'], conf['smtpPort'])
         smtpserver.ehlo()
         smtpserver.starttls()
-      
+
       smtpserver.ehlo()
       smtpserver.login(conf['smtpUsername'], conf['smtpPassword'])
-      
+
       smtpserver.sendmail(conf['smtpUsername'], conf['toAddress'], msg.as_string())
       smtpserver.quit()
-      
+
     except Exception, e:
       PrintMessage('Error while sending mail: ' + str(e))
   #end MailNotify
@@ -614,7 +614,7 @@ class DNSUpdater(object):
 
   def Update(self):
     global conf, st
-    
+
     #call external DDNS update prog if configured:
     if conf['dDNSProg'] != '':
       SubprocessCallWithLog(conf['dDNSProg'])
@@ -647,12 +647,12 @@ class DNSUpdater(object):
       #end if got IP
     #end if self.dDNSEnabled or self.emailEnabled
 
-    
+
     #new ip does not match stored one -> update DNS, email notify
     if self.gotNewIP:
-      
+
       if self.dDNSEnabled and (not st['dDNSLocked']):
-      
+
         ##############################
         # FreeDNS style update method
         ##############################
@@ -674,7 +674,7 @@ class DNSUpdater(object):
         # Members NIC Update API (DynDNS style update method)
         ######################################################
         # For specs see https://help.dyn.com/remote-access-api/
-        
+
         elif conf['dDNSHosts'] != '':
           PrintMessage(msg+'IP has changed. Starting DNS update.', False)
 
@@ -754,7 +754,7 @@ class DNSUpdater(object):
           #"good 123.23.24.25\ngood 123.23.24.25"
           hostRes = map(lambda x: x.split(' '), httpData.split('\n'))
           hosts = conf['dDNSHosts'].split(',')
-          
+
           for key, r in enumerate(hostRes):
             if r[0] == 'good':
               try:
@@ -767,10 +767,10 @@ class DNSUpdater(object):
                   st['dDNSLockedUntil'] = time() + 30 * 60
               except IndexError: #provider does not follow specs
                 PrintMessage(hosts[key] + ': DNS provider returned "good" but no IP as per specification.', False)
-                
+
               if not st['dDNSLocked']:
                 PrintMessage(hosts[key] + ': IP updated', False)
-                
+
             elif r[0] == 'nochg':
               PrintMessage(hosts[key] + ': IP didn\'t change', False)
             elif r[0] == 'badauth':
@@ -793,10 +793,10 @@ class DNSUpdater(object):
             elif r[0] == '911':
               PrintMessage(hosts[key] + ': There is a problem or scheduled maintenance on the DDNS side. This is a remote server error. DNS update will be suspended for 30 minutes. Contact your DDNS customer support if this error persists.', False)
               st['dDNSLockedUntil'] = time() + 30 * 60
-              
+
             else: #provider does not follow specs
               PrintMessage(hosts[key] + ': Received an unknown return code from the update server. Full string returned:\n' + httpData, False)
-              
+
 
           lockCodes = ['badauth', '!donator', 'notfqdn', 'nohost', 'numhost', 'abuse', 'badagent', 'dnserr', '911']
           if r[0] in lockCodes: st['dDNSLocked'] = True
@@ -807,11 +807,11 @@ class DNSUpdater(object):
         else:
           st['ip'] = ip #store new IP only if update completed
       #end if self.dDNSEnabled and (not st['dDNSLocked'])
-    
+
       #####################
-      # email notification 
+      # email notification
       #####################
-      
+
       if self.emailEnabled:
         PrintMessage(msg+'IP has changed. Sending e-mail notification.', False)
         self.MailNotify(ip)
@@ -819,7 +819,7 @@ class DNSUpdater(object):
         if not self.dDNSEnabled:
           st['ip'] = ip
       #end if self.emailEnabled
-      
+
     #end if self.gotNewIP
 
     st['dDNSNextTest'] = time() + 30*60
@@ -878,7 +878,7 @@ class HTTPHandler(BaseHTTPRequestHandler):
 
           s = ''
 
-          #generate HTML on the fly if we don't have it on disk or if the 
+          #generate HTML on the fly if we don't have it on disk or if the
           #request comes with an argument:
           if ((self.path == statFileHTMLName) and (not conf['writeHTMLStats'])) or (iarg >= 0):
             s = WriteStatFileHTML()
@@ -1427,11 +1427,11 @@ def PrintMessage(msgText, timeStamp = True, logLevel = 1):
       msg = GetTime() + ' ' + msgText
     else:
       msg = '  ' + msgText
-  
+
     if conf['printMsg']: print msg
-      
+
     if conf['logMsg']: LogMsg(msg + '\n')
-  
+
     msg = msg.replace('<', '&lt;').replace('>', '&gt;') #HTML escape
     intLog.append(msg+'\n')
     if len(intLog) > 100: intLog.pop(0)
@@ -1512,7 +1512,7 @@ def DoStats():
         f = file('/sys/class/net/' + conf['ifaceName'] + '/statistics/tx_bytes', 'r')
         txBytes = int(f.read())
         f.close
-      except IOError: 
+      except IOError:
         return 0 #in this case, network device is not present (meanwhile unplugged)
     #end if (netOperstate == "up") or (netOperstate == "unknown")
   #end if not limitExceeded
@@ -1795,7 +1795,7 @@ def DoStats():
   remainingBytesDaily = ((conf['limitMonth'] - (st['rxBMonth'] + st['txBMonth'])) * 24) / (((conf['monthStartDay'] + lastDayOfMonth - st['today']) * 24) - st['currHr'])
 
   statFileComplete = True
-  #~ timer[0] = time() - uSecond 
+  #~ timer[0] = time() - uSecond
   graphs['sec'].refresh = True
   graphs['hrs'].refresh = True
   graphs['days'].refresh = True
@@ -1866,7 +1866,7 @@ def MigrateStats():
         com += "st['dDNSLockedUntil'] = 0\n"
         com += "st['dDNSConfHash'] = ''\n"
         com += "st['dDNSNextTest'] = 0\n"
-  
+
       if (float(statProgVersion) <= 2.03) and (float(statProgSubVersion) < 20140106):
         year = datetime.now().year
         if (year >= 2014) and (st['currYear'] < 2014):
@@ -1874,7 +1874,7 @@ def MigrateStats():
           convert = True
           c = f.read() #read entire file
           com += "st['currYear'] = " + str(year) + "\n"
-  
+
       if (float(statProgVersion) < 2.07):
         PrintMessage('Found version ' + statProgVersion + ' statfile, adding data.')
         convert = True
@@ -1901,8 +1901,8 @@ def MigrateStats():
     f.write(com) #append conversion code
     f.close()
 
-    #reading actually runs the file as python code and does the conversion of 
-    #vars (this is the easy way of doing it so we don't need to define all those 
+    #reading actually runs the file as python code and does the conversion of
+    #vars (this is the easy way of doing it so we don't need to define all those
     #global vars for every old version there might be)
     ReadStatFile()
     WriteStatFile() #write new format
@@ -1947,7 +1947,7 @@ def ReadStatFile():
         execfile(statFile + '~')
       except Exception, e:
         PrintMessage('Reading backup stats file returned an error: "%s". Starting with empty statistics.' % (str(e)), 0)
-  
+
 #end ReadStatFile
 
 
@@ -1955,7 +1955,7 @@ def ReadStatFile():
 #write text stat file
 def WriteStatFile(writeToLog = False):
   global statFileComplete, dnsUpdater
-  
+
   if (not conf['writeStats']) and (not dnsUpdater.enabled):
     return
 
@@ -2051,23 +2051,23 @@ def WriteStatFileHTML(doHTML=True):
   if conf['runHTMLShowGraphs'] == 3: c = ('', '', 'class="active"')
   s += 'graphs: <a %s href="?showgraphs=0">&nbsp;none&nbsp;</a>&nbsp;<a %s href="?showgraphs=1">&nbsp;minimal&nbsp;</a>&nbsp;<a %s href="?showgraphs=3">&nbsp;all&nbsp;</a>' % c
   s += sep
-  
+
   if conf['runHTMLShowLog']:
     s += '<a href="?showlog=0">&nbsp;hide&nbsp;log&nbsp;</a>'
   else:
     s += '<a href="?showlog=1">&nbsp;show&nbsp;log&nbsp;</a>'
-  
+
   s += sep
   s += '<a href="?reconnect">&nbsp;connect&nbsp;</a>'
-  
+
   if dnsUpdater.enabled:
     s += sep
     s += '<a href="?updatedns">&nbsp;update&nbsp;DNS&nbsp;</a>'
-  
+
   #for debug: USB-softreset button
   #~ s += sep
   #~ s += '<a href="?reset">&nbsp;reset&nbsp;</a>'
-  
+
   s += '</div>\n'
 
   #captions:
@@ -2293,7 +2293,7 @@ def GetSakisErrorMsg(errorCode):
     errorMsg = sakisErrorMsg[errorCode]
   except:
     errorMsg = 'Undefined error (%d)' % errorCode
-  
+
   return(errorMsg)
 #end GetSakisErrorMsg
 
@@ -2313,40 +2313,40 @@ def SakisReconnect():
 def ResetUSB():
   #get USB bus and device numbers of modem:
   output = subprocess.Popen('lsusb | grep ' + conf['deviceName'], shell=True, stdout=subprocess.PIPE).communicate()[0]
-  
+
   if output != '':
     busNr = output[4:7]
     devNr = output[15:18]
-    
+
     PrintMessage('Trying to reset USB device %s (Bus %s, Device %s)...' % (conf['deviceName'], busNr, devNr))
     #~ errorCode = subprocess.call(usbResetProg + ' /dev/bus/usb/' + busNr + '/' + devNr, shell=True)
-    
+
     #USB reset IOCtl opcode taken from http://stackoverflow.com/questions/14626395
     from fcntl import ioctl
     #define USBDEVFS_RESET  _IO('U', 20)
     USBDEVFS_RESET = ord('U') << (4*2) | 20
-    
+
     fn = '/dev/bus/usb/%s/%s' % (busNr, devNr)
     statusCode = 0
-    
+
     try:
       fd = open(fn, 'wb')
     except Exception, err:
       PrintMessage('Error while trying to open device file %s for writing: "%s"' % (fn, err))
       return(err)
-  
+
     try:
       #call USB reset IOCtl function
       statusCode = ioctl(fd, USBDEVFS_RESET, 0)
     except Exception, err:
       PrintMessage('Error with USB device reset IOCtl call: "%s"' % (err,))
       return(err)
-    
+
     PrintMessage('Device reset returned status code %u%s. Will retry to connect.' % (statusCode, (' (success)' if statusCode == 0 else '')))
-    
+
   else:
     PrintMessage('Device %s not found for reset (perhaps modeswitch is not yet done).' % conf['deviceName'])
-  
+
 #end ResetUSB
 
 
@@ -2363,10 +2363,10 @@ def Main():
   sakisFailCtr = 0
   sakisLockedUntil = 0
   disconnectNecessary = False
-  
+
   while True:
     cycleCtr += 1
-    
+
     #not conf['logOnly'] means that we want to do all the sakis3g connect stuff
     if not conf['logOnly']:
 
@@ -2384,11 +2384,11 @@ def Main():
         #test if we are still online:
         if not inetIsDown:
           inetIsDown = subprocess.call(sakisProg + ' silent status', shell=True) #returns 0 if connected
-          
+
           ################
           # experimental
           ################
-          #the 'link_mode' file, with detachable networks, contains '0' if up  
+          #the 'link_mode' file, with detachable networks, contains '0' if up
           #else it doesn't exist; try if we have one:
           linkMode = ''
           try:
@@ -2411,18 +2411,18 @@ def Main():
               PrintMessage('DNS lookup of %s failed. The modem seems to be stalled without the system being aware of it. Please send feedback to %s if it doesn\'t reconnect after this error.' % (conf['DNSprobeDomain'], emailAuthor))
               ResetUSB()
         #end if not inetIsDown
-        
+
 
         if (inetIsDown) and (not limitExceeded): #we are offline
           RaiseOfflineFlag()
 
-          #inetIsDown is initialised to True, just to be sure. We call Sakis3G 
+          #inetIsDown is initialised to True, just to be sure. We call Sakis3G
           #anyway but the DOWN message would be misleading:
           if newlyStarted:
             PrintMessage('Program startup. Calling Sakis3G connect, to be sure...')
-            
+
             #~ #if we already did a reboot, disable further rebooting
-            #~ if conf['rebootNonModeswitched'] and (st['rebootCtr'] == 1): 
+            #~ if conf['rebootNonModeswitched'] and (st['rebootCtr'] == 1):
               #~ st['rebootCtr'] = 2
           else:
             PrintMessage('Internet connection is DOWN. Calling Sakis3G connect...')
@@ -2449,7 +2449,7 @@ def Main():
           if (errorCode > 0) and (errorCode != 12):
             errorMsg = GetSakisErrorMsg(errorCode)
             PrintMessage(errorMsg)
-            
+
             #'reboot if no modeswitch possible' option
             if newlyStarted and conf['rebootNonModeswitched']:
               SakisStatus() #see if modem could be detected
@@ -2463,10 +2463,10 @@ def Main():
                 sys.exit(2)
               #end if conf['rebootNonModeswitched']
             #end 'reboot if no modeswitch possible' option
-            
+
             #retry with disconnect - connect
             disconnectNecessary = True
-            
+
             #~ sakisActors = 'ignore disconnect connect'
             #~ cmdLine = sakisProg + ' ' + sakisActors + ' ' + sakisSw + ' ' + sakisOp
             #~ PrintMessage('Still not online. Trying disconnect-reconnect...')
@@ -2483,7 +2483,7 @@ def Main():
             elif wrongPinCount ==  2:
               PrintMessage("Wrong PIN (second time)! Aborting. Please connect through a GUI or with 'sakis3g --interactive' to be safe.")
               sys.exit(3)
-            
+
             time.sleep(conf['wrongPinDelay'])
 
           #if we have a "Modem unable to register a network" error, try re-registering to a network.
@@ -2502,7 +2502,7 @@ def Main():
           inetIsDown = subprocess.call(sakisProg + ' silent status', shell=True) #returns 0 if connected
 
           #connection successful
-          if not inetIsDown: 
+          if not inetIsDown:
             PrintMessage('Success... we are online!')
             #register a new session start only if we were already online at startup
             if newlyStarted:
@@ -2514,36 +2514,36 @@ def Main():
             if conf['rebootNonModeswitched'] and st['rebootCtr']:
               PrintMessage('Previous reboots: %d.' % st['rebootCtr'], False, 5)
               st['rebootCtr'] = 0
-          
+
           #connection could not be established
-          else: 
+          else:
             cycleCtr = conf['testCycle'] + 1
             sakisFailCtr += 1
-            
+
             #test if maximum connection attempts reached:
             if conf['sakisMaxFails'] and (sakisFailCtr >= conf['sakisMaxFails']):
               sakisLockedUntil = time() + conf['sakisFailLockDuration']
               PrintMessage('Unable to connect, tried %d times now. Next connection retry in %d seconds. Turn this behaviour off by setting the config variable conf[\'sakisMaxFails\']=0.' % (conf['sakisMaxFails'], conf['sakisFailLockDuration']))
               connectionMsg = 'Too many connection retries failed.<br>Next try: %s.' % strftime('%F %T', localtime(sakisLockedUntil))
-            
+
             else: #max. retries not reached
               PrintMessage('Unable to establish Internet connection. Will keep trying...')
 
             PrintMessage('Sakis3G info:', False)
-            
+
             SakisStatus() #see if modem could be detected
 
             #as a last resort, reset the USB port:
             if modemIsPlugged: #modem has been detected, though
               ResetUSB()
-            
+
           #end if inetIsDown
         #end if (inetIsDown) and (not limitExceeded)
-        
+
         newlyStarted = False
-        
+
         #~ #if we already did a reboot, reset reboot counter
-        #~ if st['rebootCtr'] == 2: 
+        #~ if st['rebootCtr'] == 2:
           #~ st['rebootCtr'] = 0
           #~ PrintMessage('Reboot counter reset.')
 
@@ -2587,8 +2587,8 @@ def Main():
     # (3) counters are not reset during disconnect or deactivation
 
     if (not inetIsDown) or conf['logOnly']:
-      
-      #the 'operstate' file contains up/down info only with 
+
+      #the 'operstate' file contains up/down info only with
       #'static' (non-detachable) networks (else 'unknown'); try if we have one:
       try:
         f = file('/sys/class/net/' + conf['ifaceName'] +  '/operstate', 'r')
@@ -2600,7 +2600,7 @@ def Main():
 
       if ((netOperstate != 'up') and (netOperstate != 'unknown')) \
         or (netOperstate == 'file not found'): #'down' or 'dormant' or no operstate file
-        
+
         if not inetIsDown:
           RaiseOfflineFlag('--- (device not found or not connected to network)')
           PrintMessage('Offline: Network device ' + conf['ifaceName'] + ' not found or not connected. (netOperstate: ' + netOperstate + ')', 1)
@@ -2655,7 +2655,7 @@ def Main():
     #end if (not inetIsDown) or conf['logOnly']
 
     #write stat file only if stats have been done or dnsupdater requires it:
-    if statFileComplete or dnsUpdater.enabled: 
+    if statFileComplete or dnsUpdater.enabled:
       WriteStatFile()
       if statFileComplete: WriteStatFileHTML(conf['writeHTMLStats'])
       if time() > nextStatCopySecond:
@@ -2729,7 +2729,7 @@ def ExitProc():
     DoStats()
 
   #write stat file only if stats have been done or dnsupdater requires it:
-  if statFileComplete or dnsUpdater.enabled: 
+  if statFileComplete or dnsUpdater.enabled:
     WriteStatFile()
     if conf['tempPath'] != conf['statFilePath']: copy(statFile, conf['statFilePath']) #secure updated statfile
 
@@ -2766,7 +2766,7 @@ def ParseRunArguments(args):
   global confFile, statFile, statFileHTML, monthlyFile, dailyFile, hourlyFile
 
   outArgs = []
-  
+
   while len(args) > 0:
     arg = args.pop(0)
     if arg == '--devicename':
@@ -2839,7 +2839,7 @@ def ParseRunArguments(args):
       print('unknown option: ' + arg)
       sys.exit(1)
   #end while len(args) > 0
-  
+
   return outArgs
 #end ParseRunArguments
 
@@ -2863,7 +2863,7 @@ def ParseAdditionalRunCommands(args):
       else:
         PrintMessage('Error while resetting Monthly transfer counter. Main stats file is not complete.')
       sys.exit()
-      
+
     elif arg == 'resettransferstats': #reset transfer counters
       ReadStatFile()
       st['rxBHrs'] = [0] * 24
@@ -2894,7 +2894,7 @@ def ParseAdditionalRunCommands(args):
       else:
         PrintMessage('Error while resetting transfer statistics. Main stats file is not complete.')
       sys.exit()
-      
+
     elif arg == 'resetratestats': #reset transfer rate counters
       ReadStatFile()
       st['hrsMaxRateAcc'] = [0] * 24
@@ -2972,7 +2972,7 @@ if i >= 0:
 #get log file path
 try:
   i = args.index('--logfile')
-except ValueError: 
+except ValueError:
   i = -1
 if i >= 0:
   args.pop(i)
@@ -3053,7 +3053,7 @@ PrintMessage('Start: ver. %s %s; PID = %d; Python v. %d.%d.%d' % (version, subVe
 # Config file and command line argunments
 ##########################################
 #if we have a conffile, run it
-if confFile != '': 
+if confFile != '':
   PrintMessage('Using config file ' + confFile, False)
   execfile(confFile)
 

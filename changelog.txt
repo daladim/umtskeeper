@@ -17,20 +17,20 @@
 - Added Python version to log on startup.
 - Removed CPU hungry stat variable sorting which is really only a debugging
   convenience.
-  
+
 20150315
 - Fixed variable reference error in the update routine.
 
 20150228.1000
-- Fixed a variable reference fatal error in the DNS updater that was introduced 
+- Fixed a variable reference fatal error in the DNS updater that was introduced
   in 2.07. (thanks Tomas)
 
 20150220
-- Added option to reboot the system if an already attached modem could not 
+- Added option to reboot the system if an already attached modem could not
   be mode-switched. This proved to work on systems such as the Rasperry Pi which
   may be powered on with the modem attached.
 - Added option for e-mail notification on IP change. (thanks Jan)
-- Replaced external USB reset program by Python function. This eliminates 
+- Replaced external USB reset program by Python function. This eliminates
   compatibility issues with ARM architectures. (thanks Matthias)
 - Updated the included Sakis3G to newest version.
 - Fixed initialisation routine where it would cause logic failure.
@@ -58,7 +58,7 @@
 - Corrected version number (20140430 build was still labeled 2.04-20140220).
 
 20140430
-- Added the Sakis3G program (binary-free version) to the download. This should 
+- Added the Sakis3G program (binary-free version) to the download. This should
   simplify download and install.
 - Fixed "variable referenced before assignment" error when trying to retrieve a
   Sakis3G error message.
@@ -77,28 +77,28 @@
   a HTML file to disk, regardless of the 'writeHTMLStats' configuration.
 
 20140119
-- Fixed a bug that made the DNS updater work incorrectly if user chose to not 
+- Fixed a bug that made the DNS updater work incorrectly if user chose to not
   keep statistics.
-- Fixed bug that invoked DNS update on every HTML page reload if you had done a 
+- Fixed bug that invoked DNS update on every HTML page reload if you had done a
   manual update (no harm done, only log annoyance).
 
 20140112
-- Added catching of errors while loading the stats file. It will now simply 
-  ignore a failure to execute the stats file(s). The malformed stats file will 
+- Added catching of errors while loading the stats file. It will now simply
+  ignore a failure to execute the stats file(s). The malformed stats file will
   be saved as umtskeeper.stat.err (thanks Stanislav)
-- Removed too alarming message "No PID file found" on normal startup. This is 
+- Removed too alarming message "No PID file found" on normal startup. This is
   only necessary when a "stop" command was invoked.
 
 20140107.2350
-- Changed log message ("DOWN") on program start when Sakis3G connect is 
-  called. I'm not sure about the reliability of information if the modem is 
-  reported as "already connected". Often enough, my modem LED signalled 
-  'online' when indeed the internet was unreachable. Therefore, connect in any 
+- Changed log message ("DOWN") on program start when Sakis3G connect is
+  called. I'm not sure about the reliability of information if the modem is
+  reported as "already connected". Often enough, my modem LED signalled
+  'online' when indeed the internet was unreachable. Therefore, connect in any
   case and just change the log message.
 - Added a 'logLevel' setting. This may only be useful in development.
 - Don't store backups of the stats file in the log file. During half a year of
   use, the statistics were never lost with me (unlike in v.1), meaning that the
-  clean shutdown works well enough. This backup can be switched on by setting 
+  clean shutdown works well enough. This backup can be switched on by setting
   conf['logLevel']=3 or higher.
 
 
